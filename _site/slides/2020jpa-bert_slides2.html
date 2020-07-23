@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="浅川伸一 (東京女子大学) asakawa@ieee.org" />
+  <title>BERT 入門</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="/Users/asakawa/study/css/asa_markdown2.css" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="/Users/asakawa/study/css/turing.css" />
+  <script src="/Users/asakawa/study/2019mathjax-MathJax-419b0a6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+  </script>
+  <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">BERT 入門</h1>
+  <p class="author">
+浅川伸一 (東京女子大学) asakawa@ieee.org
+  </p>
+  <p class="date">14/Jun/2020</p>
+</div>
+<div id="心理学に現れた注意のまとめ" class="slide section level1">
+<h1>心理学に現れた注意のまとめ</h1>
+</div>
+<div id="dicotomy" class="slide section level1">
+<h1>Dicotomy</h1>
+<ul>
+<li>ボトムアップ と トップダウン</li>
+<li>何 と 何処 (腹側 背側)</li>
+<li>特徴，対象，場所へ向けられるの注意</li>
+<li>外発的，内発的 注意</li>
+</ul>
+</div>
+<div id="関連脳領域" class="slide section level1">
+<h1>関連脳領域</h1>
+<ul>
+<li>FEF 前頭眼野 <span class="citation">(Monosov and Thompson 2009)</span></li>
+<li>Lateral Intraparietal area (LIP) 側頭頭頂領域 <span class="citation">(Wardak, Olivier, and Duhamel 2004)</span></li>
+<li>Superior Colliculus(SC) 上丘 <span class="citation">(Krauzlis, Lovejoy, and Zénon 2013)</span></li>
+<li>PFC 前頭皮質 <span class="citation">(Miller and Cohen 2001)</span></li>
+<li>VPA <span class="citation">(Bichot et al. 2015)</span></li>
+</ul>
+</div>
+<div id="認知心理学分野" class="slide section level1">
+<h1>認知心理学分野</h1>
+<ul>
+<li>フィルタリング [<span class="citation">Broadbent (1958)</span>}, 減衰説 <span class="citation">(Treisman 1969)</span></li>
+<li>特徴統合理論 <span class="citation">(Treisman and Gelade 1980)</span>;<span class="citation">(Treisman 1988)</span></li>
+<li>Guided Search 2.0 <span class="citation">(Wolfe 1994)</span></li>
+<li>目標／妨害刺激類似性: <span class="citation">(Duncan and Humphreys 1989, 1992DuncanHumphreys_engagement)</span></li>
+<li>サーチライト(スポットライト)仮説 <span class="citation">(Crick 1984)</span>, ズームレンズ<span class="citation">(Eriksen and St.James 1986)</span></li>
+<li>勝者占有回路<span class="citation">(Koch and Ullman 1985)</span> = softmax</li>
+</ul>
+</div>
+<div id="計算モデル-implementation" class="slide section level1">
+<h1>計算モデル (Implementation)</h1>
+<ul>
+<li><span class="citation">(Milanese et al. 1994)</span></li>
+<li><span class="citation">(Itti, Koch, and Niebur 1998)</span></li>
+<li><span class="citation">(Borji and Itti 2013)</span> SOTA</li>
+</ul>
+</div>
+<div id="総説論文" class="slide section level1">
+<h1>総説論文</h1>
+<ul>
+<li><span class="citation">(Itti and Koch 2001)</span></li>
+<li><span class="citation">(Knudsen 2007)</span></li>
+<li><span class="citation">(Petersen and Posner 2012)</span></li>
+<li><span class="citation">(Kimura, Yonetani, and Hirayama 2013)</span></li>
+<li><span class="citation">(Itti and Borji 2015)</span> Oxford Handbook of attention</li>
+</ul>
+</div>
+<div id="深層学習系" class="slide section level1">
+<h1>深層学習系</h1>
+<ul>
+<li>自動翻訳 <span class="citation">(Bahdanau, Cho, and Bengio 2015, 2015Luong_attention)</span></li>
+<li>画像脚注付け <span class="citation">(Vinyals et al. 2015)</span></li>
+<li>注意 <span class="citation">(Wang and Shen 2018)</span></li>
+</ul>
+<!-- # ニューラル画像脚注付け
+2014 年に提案されたニューラル画像脚注付けのモデル
+
+<center>
+
+![](figures/2014KarpathyImageDescriptionsFig3.svg){style="width:49%"}<br/>
+From [@2015Karpathy_FeiFei_caption] Fig. 3
+</center>
+
+# ニューラル画像脚注付け(2)
+<center>
+
+![](figures/2014Vinyals_Fig1.svg){style="width:84%"}<br/>
+From [@2014Vinyals_Bengio_Show_and_Tell] Fig. 1
+</center>
+ -->
+<!-- # 
+<center>
+
+![](figures/2015Xu_ShowAttendTellFig2_upper.svg){style="width:64%"}
+![](figures/2015Xu_ShowAttendTellFig2_lower.svg){style="width:84%"}<br/>
+From [@2015Xu_Bengio_NIC_attention] Fig. 2
+</center>
+各画像対は右が入力画像であり，左はその入力画像の脚注付けである単語を出力している際にどこに注意しているの
+かを白色で表している。
+ -->
+</div>
+<div id="温故知新" class="slide section level1">
+<h1>温故知新</h1>
+<ul>
+<li>脳梁切断患者による分離脳 <span class="citation">(Sperry 1961)</span></li>
+<li>半側空間無視 <span class="citation">(Heilman and Valenstein 1979)</span></li>
+<li>頭頂葉損傷患者の注意のディスエンゲージメント<span class="citation">(Posner 1980)</span></li>
+<li>両耳分離聴実験, カクテルパーティ効果 <span class="citation">(Broadbent 1958)</span>;<span class="citation">(Treisman 1964)</span></li>
+<li>特徴統合理論[<span class="citation">Treisman and Gelade (1980)</span>,1988Treisman}</li>
+<li>計算論的モデル サーチライト(スポットライト)仮説 <span class="citation">(Crick 1984)</span></li>
+<li>モデルとデータセット公開，競技会 <span class="citation">(Itti and Koch 2001)</span>;<span class="citation">(Itti and Borji 2014)</span></li>
+<li>DeepGazeII <span class="citation">(Kümmerer et al. 2017)</span></li>
+</ul>
+</div>
+<div id="分離脳-split-brain" class="slide section level1">
+<h1>分離脳 Split brain</h1>
+<center>
+<img src="figures/sperry1968exp.png" style="width:84%" /><br/> From <span class="citation">(Sperry 1968)</span> Fig. 5
+</center>
+</div>
+<div id="半側空間無視" class="slide section level1">
+<h1>半側空間無視</h1>
+<center>
+<img src="figures/1988BloomLazen_Fig17-6.svg" style="width:29%" /><br/> From <span class="citation">(Bloom and Lazerson 1988)</span> Fig. 17-6
+</center>
+</div>
+<div id="ポズナーとコーヘン" class="slide section level1">
+<h1>ポズナーとコーヘン</h1>
+<center>
+<img src="figures/1982Posner_Fig1.svg" style="width:29%" /> <img src="figures/1982Posner_Fig6.svg" style="width:34%" /><br/> From <span class="citation">(Posner 1980)</span> Fig. 1, Fig.6: 右頭頂葉障害を呈した患者 (R.S.) の結果。 円:ターゲットが左視野提示， 三角:ターゲット右視野提示。 白点線:非有効手がかり，黒実線:有効手がかり。横軸は ISI。縦軸は反応時間中央値
+</center>
+</div>
+<div id="特徴統合理論-fit" class="slide section level1">
+<h1>特徴統合理論 (FIT)</h1>
+<center>
+<img src="figures/1986TreismanSouther_Fig9.svg" style="width:39%" /><br/> From <span class="citation">(Treisman and Souther 1985)</span> Fig. 9
+</center>
+</div>
+<div id="探索非対称性-search-asymmetry" class="slide section level1">
+<h1>探索非対称性 search asymmetry}</h1>
+<center>
+<img src="figures/1988Treisman_Fig3.svg" style="width:74%" /><br/> From [<span class="citation">Treisman (1988)</span>} Fig. 3
+</center>
+<p>上図右の結果は横軸に同時に提示された刺激の個数であり，縦軸は反応時間です。 線分特徴が存在する刺激 (Q) が目標となるか，存在しない (O) が目標となるか によって反応時間に差が認められます。結果は点線，すあんわち特徴が存在しな い目標を探索する条件，点線で描画，では同時に提示された刺激数が増加するに 従って反応時間が増大します。一方，特徴が存在する目標を探索する条件では， 同時提示された刺激の個数によらず反応時間は平坦になります。 以下に同様な実験結果を示しました。</p>
+</div>
+<div id="スポットライトメタファー" class="slide section level1">
+<h1>スポットライトメタファー</h1>
+<center>
+<img src="figures/1985KochUllman_Fig5.svg" style="width:49%" /><br/> From <span class="citation">(Koch and Ullman 1985)</span> Fig. 5
+</center>
+<ul>
+<li><p>スポットライトメタファー <span class="citation">(Crick 1984)</span></p>
+<blockquote>
+<p>Attention can be likened to a spotlight that enhances the efficiency of detection of events within its beam. Unlike when acuity is involved, the effeet of the beam is not related to the fovea. When the fovea is unill uminated by attention, its ability to lead to detection is diminished, as would be the case with any other are a of the visual system. Posner p.172</p>
+</blockquote></li>
+<li><p><span class="citation">(Summerfield et al. 2006)</span> は AI の研究にも影響</p></li>
+<li><p>ネットワークの内部メモリから読み出す情報を選択するために注意機構</p></li>
+<li><p>機械翻訳 <span class="citation">(Bahdanau, Cho, and Bengio 2015)</span>，NTM <span class="citation">(Graves et al. 2016)</span></p></li>
+<li><p>コンテンツアドレス<span class="citation">(Hopfield 1982)</span></p></li>
+<li><p>BERT <span class="citation">(Devlin et al. 2018)</span></p></li>
+</ul>
+</div>
+<div id="inhibition-of-return-ior" class="slide section level1">
+<h1>Inhibition of Return (IOR)</h1>
+<center>
+<img src="figures/2008Klein_scholarpedia_IOR.jpg" style="width:33%" alt="IOR" /><br/> From <a href="http://www.scholarpedia.org/article/Inhibition_of_return" class="uri">http://www.scholarpedia.org/article/Inhibition_of_return</a>
+</center>
+<p>From The superior colliculus (SC) has been implicated as the neural substrate for IOR through four converging, but indirect, lines of evidence.</p>
+<ol style="list-style-type: decimal">
+<li>IOR is abnormal in patients with midbrain degeneration due to progressive supranuclear palsy (PSP).</li>
+<li>It is preserved in patients with hemianopia, a condition in which only extrageniculate pathways are available to process visual information.</li>
+<li>It is present in newborn infants, in whom the geniculostriate pathways are not yet developed.</li>
+<li>It is generated asymmetrically in temporal and nasal visual fields, suggesting retinotecal mediation.</li>
+</ol>
+</div>
+<div id="ガイド付き探索モデル-guided-search-2.0" class="slide section level1">
+<h1>ガイド付き探索モデル Guided Search 2.0</h1>
+最初にトップダウン注意を明示的に示した *ガイド付き探索モデル** [<span class="citation">Wolfe (1994)</span>}
+<center>
+<img src="figures/1994Wolfe_GS2Fig2.jpg" style="width:74%" /><br/> From <span class="citation">(Wolfe 1994)</span> Fig. 2
+</center>
+</div>
+<div id="section" class="slide section level1">
+<h1></h1>
+<span class="citation">(Itti and Borji 2015)</span> の総説論文からそれまでのモデルの概説図
+<center>
+<img src="figures/2015Itti_Fig2nocap.svg" style="width:64%" /><br/> From <span class="citation">(Itti and Borji 2015)</span> Fig. 2
+</center>
+</div>
+<div id="fristons-attetion" class="slide section level1">
+<h1>Friston’s attetion</h1>
+<center>
+<img src="figures/2014Friston_Fig1.svg" style="width:66%" /><br/> From <span class="citation">(Friston et al. 2014)</span> Fig. 1
+</center>
+</div>
+<div id="上丘-sc" class="slide section level1">
+<h1>上丘 SC</h1>
+<center>
+<img src="figures/1993Olshausen_Fig10a.svg" style="width:33%"><br/> From <span class="citation">(Olshausen, Anderson, and Essen 1993)</span> Fig. 10a
+</center>
+<ul>
+<li>霊長類の視覚系の動作は注意を伴う視線の移動により外界を認識</li>
+<li>すべての入力を並行して処理するのではなく，視覚的注意は場所や物体間の遷移<span class="citation">(Koch and Ullman 1985; Moore and Zirnsak 2017; Posner and Petersen 1990)</span></li>
+<li>情報の優先順位付け，取捨選択<span class="citation">(Olshausen, Anderson, and Essen 1993; Salinas and Abbott 1997)</span></li>
+</ul>
+</div>
+<div id="リズム現象" class="slide section level1">
+<h1>リズム現象</h1>
+<center>
+<img src="figures/2013FiebelkornSaalmann_Rhythmic_Fig1.svg" style="width:49%" /> <img src="figures/2013FiebelkornSaalmann_Rhythmic_Fig2.svg" style="width:49%" /><br/> From <span class="citation">(Fiebelkorn, Saalmann, and Kastner 2013)</span> Fig. 1 and Fig. 2a
+</center>
+</div>
+<div id="リズム現象-2" class="slide section level1">
+<h1>リズム現象 (2)</h1>
+<center>
+<img src="figures/2015BuschmanKastner_Fig3b.svg" style="width:84%" /><br/> From <span class="citation">(Buschman and Kastner 2015)</span> Fig. 3b}
+</center>
+</div>
+<div id="リズム現象-3" class="slide section level1">
+<h1>リズム現象 (3)</h1>
+<center>
+<img src="figures/2015BuschmanKastner_Fig3a.svg" style="width:47%" /> <img src="figures/2015BuschmanKastner_Fig6.svg" style="width:47%" /><br/> From <span class="citation">(Buschman and Kastner 2015)</span> Fig. 3a, Fig. 6}
+</center>
+<!-- 
+# データセット
+
+<center>
+
+![](figures/2016ECCV_saliency_research.png}{style="width:84%"}<br/>
+From ECCV2016 tutorial
+</center>
+
+- [MIT300](http://saliency.mit.edu/results_mit300.html) 自然画像 300 枚，被験者 39 名の眼球運動データ
+- [cat2000](http://saliency.mit.edu/results_cat2000.html) 自然画像 2000 枚，被験者 24 名分眼球運動データ
+- [MIT1003](http://people.csail.mit.edu/tjudd/WherePeopleLook/index.html) 自然画像1003 枚
+
+
+# 大連工科大学-オムロン データセット
+
+<center>
+
+![](figures/2019DUT-OMRON-cover.jpg}{style="width:69%"}<br/>
+From [DUT-OMRON Image dataset](http://saliencydetection.net/dut-omron/)
+</center>
+
+
+# 
+
+<center>
+
+![](figures/2015Itti_Fig3.svg){style="width:49%"}<br/>
+From [@2015IttiBorji] Fig. 3
+</center>
+ 
+
+# 
+
+<center>
+![](figures/2015Itti_Fig4.svg){style="width:49%"}<br/>
+From [@2015IttiBorji] Fig. 4
+</center>
+-->
+</div>
+<div id="deepgaze-ii" class="slide section level1">
+<h1>DeepGaze II</h1>
+<center>
+<img src="figures/2017Kummerer_DeepGazeII_Fig2a.svg" style="width:54%" /><br/> From <span class="citation">(Kümmerer et al. 2017)</span> Fig. 2
+</center>
+</div>
+<div id="deepgaze-ii-2" class="slide section level1">
+<h1>DeepGaze II (2)</h1>
+<center>
+<img src="figures/2017Kummerer_DeepGazeII_Fig3a.svg" style="width:64%" /><br/> From <span class="citation">(Kümmerer et al. 2017)</span> Fig. 2
+</center>
+<p>DeepGazeII より成績の良い最右の棒は人間の眼球運動データ</p>
+</div>
+<div id="deepgaze-ii-3" class="slide section level1">
+<h1>DeepGaze II (3)</h1>
+<center>
+<img src="figures/2017Kummerer_DeepGazeII_Fig3b.svg" style="width:69%" /><br/> From <span class="citation">(Kümmerer et al. 2017)</span> Fig. 3
+</center>
+<p>IG: 情報ゲイン, IGE: 修正情報ゲイン, ACU: area under the ROC curve, sAUC: シャッフル精度, NSS: 正規化済キャンパス顕在性 normalized scanpath saliency</p>
+</div>
+<div id="deepgaze-iii" class="slide section level1">
+<h1>DeepGaze III</h1>
+<center>
+<img src="figures/2019Kummerer_DeepGazeIII_fig1c.svg" style="width:74%" /><br/> From <span class="citation">(Kümmerer, Wallis, and Bethge 2019)</span> Fig. 1
+</center>
+</div>
+<div id="ヘルムホルツマシン" class="slide section level1">
+<h1>ヘルムホルツマシン</h1>
+<center>
+<img src="figures/1994Hinton_Helmholtz_machine_Fig3.svg" style="width:44%" /><br/> <span class="citation">(Dayan et al. 1995)</span>;<span class="citation">(Hinton et al. 1995)</span>
+</center>
+</div>
+<div id="ヘルムホルツマシン-1" class="slide section level1">
+<h1>ヘルムホルツマシン</h1>
+<p><span class="math display">\[
+\log p(d\vert\theta) = -\sum Q_aE_a-\sum Q_a\log Q_a + \sum Q_a\log\left(\frac{Q_a}{P_a}\right)\\
+=- F(d;\theta,Q)+\sum_a Q_a\log\left(\frac{Q_a}{P_a}\right)
+\]</span></p>
+<p><span class="math display">\[
+q^{(l)}\left(\phi,\mathbf{s}^{(l-1)}\right)=\sigma\left(\sum s^{l-1}\phi^{(l-1,l)}\right)
+\]</span></p>
+<p><span class="math display">\[
+Q_\alpha(\phi,d)=\prod\prod\left[q^{(l)}\left(\phi,\mathbf{s}^{(l-1)}\right)\right]^{s^{l}}
+\left[1-q^{(l)}\left(\phi,\mathbf{s}^{(l-1)}\right)\right]^{1-s}
+\]</span></p>
+<p><span class="math display">\[
+p_j^{(l)}\left(\theta,\mathbf{s}^{(l+1)}\right)=\sigma\left(\sum s^{(l+1)}\theta^{(l+1)}\right)
+\]</span></p>
+<p><span class="math display">\[
+p(\alpha\vert \theta)=\prod\prod\left[p_j^{(l)}\left(\theta,\mathbf{s}^{(l+1)}\right)\right]
+\]</span></p>
+</div>
+<div id="モデル-ヘルムホルツマシン" class="slide section level1">
+<h1>モデル: ヘルムホルツマシン</h1>
+<center>
+<img src="figures/1993Kawato_Fig1.svg" style="width:29%" /><br/> From <span class="citation">(Kawato, Hayakawa, and Inui 1993)</span> Fig. 1 より
+</center>
+<center>
+<img src="figures/1995Hinton_Wake-sleep_Fig1.svg" style="width:29%" /><br/> From <span class="citation">(Hinton et al. 1995)</span> Fig. 1 より
+</center>
+<ul>
+<li>上位層は下位層からの情報をサンプリング <span class="math inline">\(\rightarrow\)</span> 認識形成 </li>
+<li>下位層は上位層からの情報を受けとる <span class="math inline">\(\rightarrow\)</span> 情報再構成 </li>
+</ul>
+<p>ボトムアップ処理による認識とトップダウン処理による(こう見えるはずだという思い込みの)生成を <span class="math inline">\(n\)</span> (<span class="math inline">\(n=2,\ldots,4\)</span>) 回繰り返す <span class="math inline">\(\rightarrow\)</span> </p>
+</div>
+<div id="定式化" class="slide section level1">
+<h1>定式化</h1>
+<p>思い込みの印象 <span class="math inline">\(\alpha\)</span> と入力画像 <span class="math inline">\(d\)</span> を用いて%%の記述長は，単なる前隠れ層ユニットの記述損失であり</p>
+<p><span class="math display">\[
+C(\alpha,d)=C(\alpha)+C(d\vert\alpha)\\
+=\sum_{\ell\in L}\sum_{j\in\ell} C(s_j^\alpha)+\sum_i C(s_i^d\vert\alpha)
+\]</span></p>
+<p>上式を用いて結合係数の更新を行う <span class="math display">\[
+\Delta w_{kj}=\epsilon s_k^\alpha \left(s_j^\alpha-p_j^\alpha\right),
+\]</span></p>
+<p><span class="math display">\[
+C(d) = \sum_\alpha Q(\alpha\vert d) C(\alpha, d) - \left[-\sum_\alpha Q(\alpha\vert d) \log Q(\alpha\vert d)\right].
+\]</span></p>
+<p><span class="math display">\[
+p\left(\alpha\vert d\right)=\frac{e^{-C(\alpha,d)}}{\sum_\beta e^{-C(\beta,d)}}
+\]</span></p>
+<p><span class="math display">\[
+\Delta s_{j,t+1}=\epsilon s_{j,t}^\gamma(s_{j,t}^\gamma-q_{j,t}^\gamma)
+\]</span></p>
+<p>全体の良い表象が得られるまで，すなわち下位層の活性を再構築するように複数回繰り返す</p>
+</div>
+<div id="計算例" class="slide section level1">
+<h1>計算例</h1>
+<center>
+<img src="figures/tenn895x671.jpg" style="width:69%" /><br/>
+</center>
+</div>
+<div id="計算例-1" class="slide section level1">
+<h1>計算例</h1>
+<center>
+<img src="figures/2019-06-07deepdream_tennanmon.jpg" style="width:69%" /><br/>
+</center>
+</div>
+<div id="計算例-2-眼球運動のサンプリング" class="slide section level1">
+<h1>計算例 (2) 眼球運動のサンプリング}</h1>
+<center>
+<img src="figures/2019tenn_sample_from_prediction.png" style="width:69%" /><br/>
+</center>
+<!-- 
+# 話題
+
+- 一瞥ネット[@2014Mnih_RNN_attention]
+- 注意により各時刻における入力画像を "ちら見" glimpse し，内部状態表現を更新，次にサンプリング候補地を選択 [@2010LarochelleHinton_glimpse; @2014Mnih_RNN_attention]
+- 画像からキャプション生成のための強化学習 [@2015Xu_Bengio_NIC_attention]
+ -->
+<!--
+While attention is typically thought of as an orienting mechanism for perception, its ‘‘spotlight’’ can ale focused internally, toward the contents of memory. 
+This idea, a recent focus in neuroscience studies (Summerfield et al., 2006), has also inspired work in AI. 
+In some architectures, attentional mechanisms have been used to select information to be read out from the int
+ernal memory of the network. 
+This has helped provide recent successes in machine translation (Bahdanau et al., 2014) and led to important a
+dvances on memory and reasoning tasks (Graves et al., 2016). 
+These architectures offer a novel implementation of content-addressable retrieval, which was itself a concept 
+originally introduced to AI from neuroscience (Hopfield, 1982).
+-->
+</div>
+<div id="文献" class="slide section level1 unnumbered">
+<h1 class="unnumbered">文献</h1>
+<div id="refs" class="references hanging-indent">
+<div id="ref-2014Bahdanau_NMT">
+<p>Bahdanau, Dzmitry, Kyunghyun Cho, and Yoshua Bengio. 2015. “Neural Machine Translation by Jointly Learning to Align and Translate.” In <em>Proceedings in the International Conference on Learning Representations (ICLR)</em>, edited by Yoshua Bengio and Yann LeCun. San Diego, CA, USA. <a href="http://arxiv.org/abs/1409.0473">http://arxiv.org/abs/1409.0473</a>.</p>
+</div>
+<div id="ref-2015Bichot_AttentionPFC">
+<p>Bichot, Narcisse P., Matthew T. Heard, Ellen M. DeGennaro, and Robert Desimone. 2015. “A Source for Feature-Based Attention in the Prefrontal Cortex.” <em>Neuron</em> 88 (November): 832–44.</p>
+</div>
+<div id="ref-1988BloomLazerson_book">
+<p>Bloom, Floyd E., and Arlyne Lazerson. 1988. <em>Brain, Mind, and Behavior</em>. 2nd ed. New York, NY: Freeman.</p>
+</div>
+<div id="ref-2013BorjiItti_SOTA">
+<p>Borji, Ali, and Laurent Itti. 2013. “State-of-the-Art in Visual Attention Modeling.” <em>IEEE Transaction on Pattern Analysis and Machine Intelligence</em> 35 (1): 185–207.</p>
+</div>
+<div id="ref-1958Broadbent">
+<p>Broadbent, Donald E. 1958. <em>Perception and Communication</em>. Oxford,UK: Pergamon.</p>
+</div>
+<div id="ref-2015Buschman_attention">
+<p>Buschman, Timothy J., and Sabine Kastner. 2015. “From Behavior to Neural Dynamics: An Integrated Theory of Attention.” <em>Neuron</em> 88 (October): 127–44.</p>
+</div>
+<div id="ref-1984Crick_searchlight">
+<p>Crick, Francis. 1984. “Function of the Thalamic Reticular Complex: The Search Light Hypothesis.” <em>Proceedings of the National Academy of Sciences</em> 81 (July): 4586–90.</p>
+</div>
+<div id="ref-1995DayanHinton_Helmholtz">
+<p>Dayan, Peter, Geoffrey E. Hinton, Radford M. Neal, and Richard S. Zemel. 1995. “The Helmholtz Machine.” <em>Neural Computation</em> 7: 889–904.</p>
+</div>
+<div id="ref-2018BERT">
+<p>Devlin, Jacob, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2018. “BERT: Pre-Training of Deep Bidirectional Transformers for Language Understanding.” <em>arXiv Preprint</em>.</p>
+</div>
+<div id="ref-1989DuncanHumphreys">
+<p>Duncan, John, and Glyn W. Humphreys. 1989. “Visual Search and Stimulus Similarity.” <em>Psychological Review</em> 96 (3): 433–58.</p>
+</div>
+<div id="ref-1986Eriksen_Zoom_Lens">
+<p>Eriksen, Charles W., and James D. St.James. 1986. “Visual Attention Within and Around the Field of Focal Attention: A Zoom Lens Model.” <em>Perception and Psychophysics</em> 40 (4): 225–40.</p>
+</div>
+<div id="ref-2013Fiebelkorn_ryhthmic">
+<p>Fiebelkorn, Ian C., Yuri B. Saalmann, and Sabine Kastner. 2013. “Rhythmic Sampling Within and Between Objects Despite Sustained Attention at a Cued Location.” <em>Current Biology</em> 23 (December): 2553–8.</p>
+</div>
+<div id="ref-2014Friston">
+<p>Friston, Karl J, Klaas Enno Stephan, Read Montague, and Raymond J Dolan. 2014. “Computational Psychiatry: The Brain as a Phantastic Organ.” <em>The Lancet Psychiatry</em> 1: 148–58.</p>
+</div>
+<div id="ref-2016GravesDNC">
+<p>Graves, Alex, Greg Wayne, Malcolm Reynolds, Tim Harley, Ivo Danihelka, Agnieszka Grabska-Barwi nska, Sergio Gómez Colmenarejo, et al. 2016. “Hybrid Computing Using a Neural Network with Dynamic External Memory.” <em>Nature</em> 538: 471–76. <a href="https://doi.org/10.1038/nature20101">https://doi.org/10.1038/nature20101</a>.</p>
+</div>
+<div id="ref-1978Heilman">
+<p>Heilman, Kennerh M., and Edward Valenstein. 1979. “Mechanisms Underlying Hemispatial Neglect.” <em>The Annals of Neurology</em> 5 (2): 166–70.</p>
+</div>
+<div id="ref-1995Hinton_wake_sleep">
+<p>Hinton, Geoffrey E., Peter Dayan, Brendan J. Frey, and Radford M. Neal. 1995. “The "Wake-Sleep" Algorithm for Unsupervised Neural Networks.” <em>Science</em> 268 (5214): 1158–61.</p>
+</div>
+<div id="ref-Hopfield1982">
+<p>Hopfield, John Joseph. 1982. “Neural Networks and Physical Systems with Emergent Collective Computational Abilities.” <em>Proceedings of the National Academy of Sciences</em> 79: 2554–8.</p>
+</div>
+<div id="ref-2014IttiBorji_bottomup_topdown">
+<p>Itti, Laurent, and Ali Borji. 2014. “Computational Models: Bottom-up and Top-down Aspects.” In <em>The Oxford Handbook of Attention</em>, edited by Anna C. Nobre and Sabine Kastner, 1122–58. Oxford University Press.</p>
+</div>
+<div id="ref-2015IttiBorji">
+<p>———. 2015. “Computational Models of Attention.” <em>ArXiv Preprint</em>.</p>
+</div>
+<div id="ref-2001IttiKoch_Attention">
+<p>Itti, Laurent, and Christof Koch. 2001. “Computational Modelling of Visual Attention.” <em>Nature Reviews Neuroscience</em> 2: 1–11.</p>
+</div>
+<div id="ref-1998ItticKochNiebur_attention">
+<p>Itti, Laurent, Christof Koch, and Ernst Niebur. 1998. “A Model of Saliency-Based Visual Attention for Rapid Scene Analysis.” <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em> 20 (11): 1254–9.</p>
+</div>
+<div id="ref-1993KawatoInui">
+<p>Kawato, Mitsuo, Hideki Hayakawa, and Toshio Inui. 1993. “A Forward-Inverse Optics Model of Reciprocal Connections Between Visual Cortical Areas.” <em>Network: Computation in Neural Systems</em> 4 (4): 415–22.</p>
+</div>
+<div id="ref-2013Kimura_attention_survey">
+<p>Kimura, Akisato, Ryo Yonetani, and Takatsugu Hirayama. 2013. “Computational Models of Human Visual Attention and Their Implementations: A Survey.” <em>IEICE Transactions of Information &amp; Systems</em> E96-D (3): 562–78.</p>
+</div>
+<div id="ref-2007Knudsen_attention">
+<p>Knudsen, Eric I. 2007. “Fundamental Components of Attention.” <em>Annual Revivew of Neuroscience</em> 30: 57–78.</p>
+</div>
+<div id="ref-1985KochUllman_attention">
+<p>Koch, Christoh, and Simon Ullman. 1985. “Shifts in Selective Visual Attention: Towards the Underlying Neural Circuitry.” <em>Human Neurobiology</em> 4: 219–27.</p>
+</div>
+<div id="ref-2013KrauzlisLovejoy_SC">
+<p>Krauzlis, Richard J., Lee P. Lovejoy, and Alexandre Zénon. 2013. “Superior Colliculus and Visual Spatial Attention.” <em>Annual Review of Neuroscience</em> 36 (165–182).</p>
+</div>
+<div id="ref-2019Kummerer_deepgaze3">
+<p>Kümmerer, Matthias, Thomas S. A. Wallis, and Matthias Bethge. 2019. “DeepGaze III: Using Deep Learning to Probe Interactions Between Scene Content and Scanpath History in Fixation Selection.” In <em>Proceedings of Cognitive Computational Neuroscience</em>, 542–45. Berlin, Germany. <a href="https://doi.org/https://doi.org/10.32470/CCN.2019.1235-0">https://doi.org/https://doi.org/10.32470/CCN.2019.1235-0</a>.</p>
+</div>
+<div id="ref-2017Kummerer_deepgaze2">
+<p>Kümmerer, Matthias, Thomas S. A. Wallis, Leon A. Gatys, and Matthias Bethge. 2017. “Understanding Low- and High-Level Contributions to Fixation Prediction.” In <em>The IEEE International Conference on Computer Vision (ICCV)</em>, 4789–98. Venice, Italy.</p>
+</div>
+<div id="ref-1994Milanese_attention">
+<p>Milanese, Ruggero, Harry Wechsler, Sylvia Gill, Jean-Marc Bost, and Thierry Pun. 1994. “Integration of Bottom-up Integration of Bottom-up and Top-down Cues for Visual Attention Using Non-Linear Relaxation.” In <em>The Proceedings of CVPR, IEEE – Institute of Electrical and Electronics Engineers</em>, 781–85. Dallas Texas, USA: Computer Vision; Pattern Recognition (CVPR).</p>
+</div>
+<div id="ref-2001MillerCohen_PFC">
+<p>Miller, Earl K., and Jonathan D. Cohen. 2001. “An Integrative Theory of Prefrontal Cortex Function.” <em>Annual Revivew of Neuroscience</em> 24 (167–202).</p>
+</div>
+<div id="ref-2009MonosovThompson_FEF">
+<p>Monosov, Ilya E., and Kirk G. Thompson. 2009. “Frontal Eye Field Activity Enhances Object Identification During Covert Visual Search.” <em>Journal of Neurophysiology</em> 102 (October): 3656–72.</p>
+</div>
+<div id="ref-2017MooreZirnsak_attention">
+<p>Moore, Tirin, and Marc Zirnsak. 2017. “Neural Mechanisms of Selective Visual Attention.” <em>Annual Review of Psychology</em> 68 (January): 47–72. <a href="https://doi.org/10.1146/annurev-psych-122414-033400">https://doi.org/10.1146/annurev-psych-122414-033400</a>.</p>
+</div>
+<div id="ref-1993Olshausen">
+<p>Olshausen, Bruno A., Charles H. Anderson, and David C. Van Essen. 1993. “A Neurobiological Model of Visual Attention and Invariant Pattern Recognition Based on Dynamic Routing of Information.” <em>The Journal of Neuroscience</em> 13 (11): 4700–4719.</p>
+</div>
+<div id="ref-2012PetersenPosner_attention">
+<p>Petersen, Steven E., and Michael I. Posner. 2012. “The Attention System of the Human Brain: 20 Years After.” <em>Annual Review of Neuroscience</em> 35: 73–89.</p>
+</div>
+<div id="ref-1990PosnerPetersen_attention">
+<p>Posner, Michael I., and Steven E. Petersen. 1990. “The Attention System of the Human Brain.” <em>Annual Review of Neuroscience</em> 13: 25–42.</p>
+</div>
+<div id="ref-Posner1980">
+<p>Posner, Michel I. 1980. “Orienting of Attention.” <em>Quarterly Journal of Experimental Psychology</em> 32: 3–25.</p>
+</div>
+<div id="ref-1997SalinasAbbott">
+<p>Salinas, Emilio, and L. F. Abbott. 1997. “Invariant Visual Responses from Attentional Gain Fields.” <em>Journal of Neurophsiology</em> 77: 3267–72. <a href="https://doi.org/10.1152/jn.1997.77.6.3267">https://doi.org/10.1152/jn.1997.77.6.3267</a>.</p>
+</div>
+<div id="ref-1961Sperry">
+<p>Sperry, Roger W. 1961. “Cerebral Organization and Behavior.” <em>Science</em> 133: 1749–57.</p>
+</div>
+<div id="ref-1968Sperry">
+<p>Sperry, Roger W. 1968. “Hemisphere Deconnection and Unity in Conscious Awareness.” <em>American Psychologist</em> 28: 723–33.</p>
+</div>
+<div id="ref-2006Summerfield_attention">
+<p>Summerfield, Jennifer J., Jöran Lepsien, Darren R. Gitelman, M. Marsel Mesulam, and Anna C. Nobre. 2006. “Orienting Attention Based on Long-Term Memory Experience.” <em>Neuron</em> 49: 905–16. <a href="https://doi.org/10.1016/j.neuron.2006.01.021">https://doi.org/10.1016/j.neuron.2006.01.021</a>.</p>
+</div>
+<div id="ref-1964Treisman_attenuated_attetion">
+<p>Treisman, Ann. 1964. “Selective Attention in Man.” <em>British Medical Bulletin</em> 20: 12–16.</p>
+</div>
+<div id="ref-1988Treisman">
+<p>———. 1988. “Feature and Objects: The Fourteenth Bartlett Memorial Lecture.” <em>The Quarterly Journal of Experimental Psychology</em> 40A: 201–37.</p>
+</div>
+<div id="ref-1969Treisman_SelectiveAttention">
+<p>Treisman, Anne M. 1969. “Strategies and Models of Selective Attention.” <em>Psychological Review</em> 76 (3): 282–99.</p>
+</div>
+<div id="ref-1980Treisman">
+<p>Treisman, Ann, and George Gelade. 1980. “A Feature Integration Theory of Attention.” <em>Cognitive Psychology</em> 12: 97–136.</p>
+</div>
+<div id="ref-1985Triesman_Souther_search_asymmetry">
+<p>Treisman, Ann, and J. Souther. 1985. “Search Asymmetry: A Diagnostic for Preattentive Processing of Separable Features.” <em>Journal of Experimental Psychology: General</em> 114 (3): 285–310.</p>
+</div>
+<div id="ref-2014Vinyals_Bengio_Show_and_Tell">
+<p>Vinyals, Oriol, Alexander Toshev, Samy Bengio, and Dumitru Erhan. 2015. “Show and Tell: A Neural Image Caption Generator.” In <em>Computer Vision and Pattern Recognition (CVPR)</em>. Boston, MA, USA. <a href="http://arxiv.org/abs/1411.4555v1">http://arxiv.org/abs/1411.4555v1</a>.</p>
+</div>
+<div id="ref-2018Wang_deep_attention">
+<p>Wang, Wenguan, and Jianbin Shen. 2018. “Deep Visual Attention Prediction.” <em>IEEE Transactions on Image Processing</em> 27 (5): 2368–78.</p>
+</div>
+<div id="ref-2004Wardak_LIP">
+<p>Wardak, Claire, Etienne Olivier, and Jean-René Duhamel. 2004. “A Deficit in Covert Attention After Parietal Cortex Inactivation in the Monkey.” <em>Neuron</em> 42 (May): 501–8.</p>
+</div>
+<div id="ref-1994Wolfe_guidedSearch2">
+<p>Wolfe, Jeremy M. 1994. “Guided Search 2.0 a Revised Model of Visual Search.” <em>Psychonomic Bulletin and Review</em> 1 (2): 202–38.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

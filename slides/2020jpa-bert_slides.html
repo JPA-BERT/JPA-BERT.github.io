@@ -1,0 +1,886 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="浅川伸一 (東京女子大学) asakawa@ieee.org" />
+  <title>BERT 入門</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        background-color: #2a211c;
+        color: #bdae9d;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #bdae9d;  padding-left: 4px; }
+    div.sourceCode
+      { color: #bdae9d; background-color: #2a211c; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ffff00; } /* Alert */
+    code span.an { color: #0066ff; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { } /* Attribute */
+    code span.bn { color: #44aa43; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #43a8ed; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #049b0a; } /* Char */
+    code span.cn { } /* Constant */
+    code span.co { color: #0066ff; font-weight: bold; font-style: italic; } /* Comment */
+    code span.do { color: #0066ff; font-style: italic; } /* Documentation */
+    code span.dt { text-decoration: underline; } /* DataType */
+    code span.dv { color: #44aa43; } /* DecVal */
+    code span.er { color: #ffff00; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #44aa43; } /* Float */
+    code span.fu { color: #ff9358; font-weight: bold; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #0066ff; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #43a8ed; font-weight: bold; } /* Keyword */
+    code span.op { } /* Operator */
+    code span.pp { font-weight: bold; } /* Preprocessor */
+    code span.sc { color: #049b0a; } /* SpecialChar */
+    code span.ss { color: #049b0a; } /* SpecialString */
+    code span.st { color: #049b0a; } /* String */
+    code span.va { } /* Variable */
+    code span.vs { color: #049b0a; } /* VerbatimString */
+    code span.wa { color: #ffff00; font-weight: bold; } /* Warning */
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="/Users/asakawa/study/css/asa_markdown2.css" />
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+   href="/Users/asakawa/study/css/turing.css" />
+  <script src="/Users/asakawa/study/2019mathjax-MathJax-419b0a6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
+  </script>
+  <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">BERT 入門</h1>
+  <p class="author">
+浅川伸一 (東京女子大学) asakawa@ieee.org
+  </p>
+  <p class="date">14/Jun/2020</p>
+</div>
+<div id="自己紹介" class="slide section level1">
+<h1><a name="intro"></a>自己紹介</h1>
+<!--がーんできるんだこれがー-->
+<div class="figure">
+<img src="figures/Elman_portrait.jpg" id="fig:elman" style="width:24%" alt="" />
+<p class="caption">師匠エルマンと USCDにて</p>
+</div>
+<p>浅川伸一:博士(文学) 東京女子大学情報処理センター勤務。早稲田大学在学時はピアジェの発生論的認識論に心酔する。卒 業後エルマンネットの考案者ジェフ・エルマンに師事，薫陶を受ける。以来人間の高次認知機能をシミュレートすることを 通して知的であるとはどういうことかを考えていると思っていた。 著書に 「<a href="https://www.ipa.go.jp/ikc/info/20181030.html">AI白書 2019, 2018</a>」(2019年, アスキー出版, 共著)，「<a href="https://www.shoeisha.co.jp/book/detail%20/9784798157559">深層学習教科書 ディープラーニング G検定（ジェネラリスト） 公式テキスト</a>」(2018年，翔泳社，共著), 「<a href="http://www.coronasha.co.jp/np/isbn/9784%20339028515/">Python で体験する深層学習</a>」(コロナ社, 2016)，「<a href="https://www.sh%20in-yo-sha.co.jp/book/b455586.html">ディープラーニング，ビッグデータ，機械学習あるいはその心理学</a>」(新曜社, 2015)，「ニューラルネットワークの数理的基礎」「脳損傷とニューラル ネットワークモデル，神経心理学への適用例」いずれも守一雄他編「コネクショニストモデルと心理学」(2001)北大路書房 など</p>
+</div>
+<div id="アウトライン" class="slide section level1">
+<h1>アウトライン</h1>
+<ol style="list-style-type: decimal">
+<li>どこにでも現れる注意</li>
+<li>BERT 概説</li>
+<li>流行の句あり</li>
+</ol>
+<!--
+- 認知科学，神経心理学，認知心理学，生理学，計算モデルでの注意
+- 近年のニューラルネットワークにおける注意
+- 少しだけ計算例. 病理も
+-->
+<!-- % \begin{enumerate}
+% -  自然言語処理分野の注意，トランスフォーマー
+% -  認知心理学，生理学，神経心理学の知見，計算モデル
+% -  DeepGazeII
+% -  計算例と考察
+%   \end{enumerate}
+%  
+ -->
+<!-- 
+# Takeaways
+
+- 大量に増殖している 多頭 自己注意 multi-head self attention の外観
+- ICLR2020 での話題
+- 長=短期記憶 LSTM と 多頭 自己注意 multi-head self attention とは，どこが異なり，どこが同じとみなせるのか。
+- 二重注意モデル (A2 Net) と LSTM とは同じか？
+- 多頭 自己注意は畳み込み演算と相同か？
+- 位置符号化 postion encoder PE の代替物
+- 認知心理学，生理学，などではトップダウンとボトムアップの 2 種類の注意が区別されてきた。計算論的には[@1984Crick_searchlight}により提唱された勝者占有回路である。
+- 自然言語処理[@2017Vaswani_transformer}，画像処理[@2019Ramachandran_attention_vision} や眼球運動での SOTA である DeepGazeIII[@2019Kummerer_deepgaze3}
+での注意ではボトムアップ注意が主であるが，トップダウン注意も用いられている。
+ -->
+</div>
+<div id="第-1-部" class="slide section level1">
+<h1>第 1 部</h1>
+<p style="margin-bottom:3cm;">
+<center>
+<font size="+4"><strong>どこにでも現れる注意</strong></font>
+</center>
+</p>
+</div>
+<div id="多頭自己注意-multi-head-self-attention-mhsa" class="slide section level1">
+<h1>多頭=自己注意 Multi-Head Self-Attention: MHSA</h1>
+<ul>
+<li>自然言語処理 NLP <strong>Transformer</strong><span class="citation">(Vaswani et al. 2017)</span>; <strong>BERT</strong><span class="citation">(Devlin et al. 2018)</span>; <strong>RoBERTa</strong><span class="citation">(Y. Liu et al. 2019)</span>; <strong>distilBERT</strong> <span class="citation">(Sanh et al. 2020)</span>; and more…</li>
+<li>画像処理 <span class="citation">(Ramachandran et al. 2019)</span>; <strong>A2-Net</strong> <span class="citation">(Chen et al. 2018)</span>; <strong>U-GAT-IT</strong> <span class="citation">(Kim et al. 2019)</span></li>
+<li>強化学習，メタ学習 <strong>SNAIL</strong> <span class="citation">(Mishra et al. 2018)</span></li>
+<li>敵対生成ネットワーク <strong>SAGAN</strong> <span class="citation">(Zhang et al. 2019)</span></li>
+</ul>
+</div>
+<div id="多頭自己注意-multi-head-self-attention" class="slide section level1">
+<h1>多頭=自己注意 Multi-Head Self-Attention</h1>
+<center>
+<img src="figures/ModalNet-19.png" style="width:15%" />                     <!-- ![](figures/ModalNet-20.jpg){style="width:24%"}--> <img src="figures/2019Ramachandran_fig3.jpg" style="width:49%" /><br/> Left: <span class="citation">(Vaswani et al. 2017)</span>, Right: <span class="citation">(Ramachandran et al. 2019)</span>
+</center>
+<p><span class="math display">\[
+\text{自己注意}\left(\mathbf{X}_{t,:}\right)=\text{ソフトマックス}\left(\mathbf{A}_{t,;}\right)\mathbf{XW}_{\text{バリュv}},
+\]</span> <span class="math display">\[
+\mathbf{A}=\mathbf{XW}_{\text{クエリq}}\mathbf{W}_{\text{キーk}}^\top\mathbf{X}^\top
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{A}:=\left(\mathbf{X}+\mathbf{P}\right)\mathbf{W}_{\text{クエリq}}\mathbf{W}_{\text{キーk}}^\top\left(\mathbf{X}+\mathbf{P}\right)^\top,
+\hspace{3em}
+\text{$\mathbf{P}$ は 位置符号化器PE}
+\]</span></p>
+</div>
+<div id="multi-head-self-attention-mhsa-2" class="slide section level1">
+<h1>Multi-head self-attention: MHSA (2)</h1>
+<center>
+<img src="figures/ModalNet-19.png" style="width:15%" />                <img src="figures/ModalNet-20.jpg" style="width:23%" />                <img src="figures/ModalNet-21.png" style="width:29%" />
+</center>
+</div>
+<div id="multi-head-self-attention-mhsa-3-sagan-self-attention-gan" class="slide section level1">
+<h1>Multi-head self-attention: MHSA (3) SAGAN (Self-Attention GAN)</h1>
+<center>
+<img src="figures/2019Zhang_Goodfellow_SAGAN_fig2.jpg" style="width:49%" /><br/> <img src="figures/2019Zhang_Goodfellow_SAGAN_fig1upper.jpg" style="width:66%" /><br/> <img src="figures/2019Zhang_Goodfellow_SAGAN_fig1lower.jpg" style="width:66%" /><br/> From <span class="citation">(Zhang et al. 2019)</span> Fig. 1, and 3. 画像生成において，近傍画素から情報だけでなく，関連する遠距離の特徴を利用して生成することにより一貫性のある対象やシナリオを生成可能。 各行の左の元画像上のカラー点は 5 つ の 代表的なクエリの場所を示す。 右側の 5 画像は 各クエリ位置における注意地図。最も注目されている領域が，色分けされた矢印で示されている。
+</center>
+</div>
+<div id="multi-head-self-attention-mhsa-4-non-local-net" class="slide section level1">
+<h1>Multi-head self-attention: MHSA (4) Non-Local Net</h1>
+<center>
+<img src="figures/2017Gupta_Non-local_fig2.svg" style="width:29%" /> <img src="figures/2017Gupta_Non-local_example_230_0_eps_18_9.svg" style="width:59%" /><br/> 時空の非局所ネットワークの概念図。特徴地図はテンソルとして示されている。 例えば 1024 チャンネルの場合は <span class="math inline">\(T\times H\times W\times1024\)</span> である。 <span class="math inline">\(\otimes\)</span> は行列積を，<span class="math inline">\(\oplus\)</span> は要素和を示す。 ソフトマックス演算は各行に対して実行される。 青いボックスは <span class="math inline">\(1\times1\times1\times1\)</span> の畳み込みを表す。 <span class="math inline">\(512\)</span> チャンネルのボトルネックを持つ埋め込みガウシアン版が示されている。 バニラガウス版は <span class="math inline">\(\theta\)</span> と <span class="math inline">\(\phi\)</span> とを除去することで ドット積版は <span class="math inline">\(1/N\)</span> のスケーリングでソフトマックスを置き換えることで行うことができる。 From <span class="citation">(Wang et al. 2018)</span>
+</center>
+</div>
+<div id="multi-head-self-attention-mhsa-4-snail" class="slide section level1">
+<h1>Multi-head self-attention: MHSA (4) SNAIL</h1>
+<center>
+<img src="figures/2018snail_fig2b.svg" style="width:49%" /><br/> From <span class="citation">(Mishra et al. 2018)</span> Fig. 2
+</center>
+<p>トランスフォーマーはリカレント構造や畳み込み構造を持たず埋め込みベクトルに位置符号化器を加えることで系列情報を処理する。 しかし、逐次的な順序情報が貧弱であるとの批判がある。 とりわけ強化学習のような位置依存性に敏感な課題では問題。 トランスフォーマーモデルにおける 位置問題を解決するため，自己注意機構 と 時間的な畳み込み temporal convolution を組み合わせたモデルが Simple Neural Attention Meta-Learner (SNAIL)<span class="citation">(Mishra et al. 2018)</span>。 SNAIL は，メタ学習，強化学習の両方の課題に優れていることが実証された。</p>
+</div>
+<div id="注意用語集-taxosonomy-of-attention" class="slide section level1">
+<h1>注意用語集 Taxosonomy of attention</h1>
+<ul>
+<li><strong>文脈ベース</strong> 注意 context-base attention: <span class="math inline">\(\text{score}(s_t,h_i)=\cos(s_t,h_i)\)</span> <span class="citation">(Graves, Wayne, and Danihelka 2014)</span> <!-- [Graves2014](https://arxiv.org/abs/1410.5401) --></li>
+<li><strong>加算的</strong> (連結的) 注意 Additive : <span class="math inline">\(\text{score}(s_t,h_i)=v_a^\top\tanh\left(W_a\left[s_t;h_i\right]\right)\)</span> <span class="citation">(Bahdanau, Cho, and Bengio 2015)</span>
+<ul>
+<li><span class="citation">(Luong, Pham, and Manning 2015)</span> では 連結 concatenated, <span class="citation">(Vaswani et al. 2017)</span> では 加算 additive と表記されている <!--  [Bahdanau2015](https://arxiv.org/pdf/1409.0473.pdf) --></li>
+</ul></li>
+<li><strong>場所ベース</strong> 注意 Location-Base: <span class="math inline">\(a_{t,i}=\text{softmax}(\mathbf{w}_a \mathbf{s}_t)\)</span> <span class="citation">(Luong, Pham, and Manning 2015)</span> <!-- [Luong2015](https://arxiv.org/pdf/1508.04025.pdf) --></li>
+<li>Note: This simplifies the softmax alignment to only depend on the target position.<br />
+</li>
+<li><strong>一般的</strong> 注意 general: <span class="math inline">\(\text{score}(s_t,h_i)=s_t^\top\mathbf{W}_ah_i\)</span> <span class="citation">(Luong, Pham, and Manning 2015)</span> <!-- [Luong2015](https://arxiv.org/pdf/1508.04025.pdf) --> <!-- - where $\mathbf{W}_a$ is a trainable weight matrix in the attention layer. --></li>
+<li><span class="math inline">\(\mathbf{W}_a\)</span> は学習可能な結合係数行列</li>
+<li><strong>ドット積</strong> 注意 dot-product: <span class="math inline">\(\text{score}(\mathbf{s}_t,\mathbf{h}_i)=s_i^\top h_i\)</span> <span class="citation">(Luong, Pham, and Manning 2015)</span> <!-- [Luong2015](https://arxiv.org/pdf/1508.4025.pdf) --></li>
+<li><strong>スケール化ドット積</strong> 注意 scaled dot-product(^): <span class="math inline">\(\displaystyle\text{score}(\mathbf{s}_t,\mathbf{h}_i)=\frac{\mathbf{s}_t \mathbf{h}_i}{\sqrt{n}}\)</span> <span class="citation">(Vaswani et al. 2017)</span>
+<ul>
+<li>スケール化規格化因子 <span class="math inline">\(1/\sqrt{n}\)</span> を用いる</li>
+</ul></li>
+</ul>
+</div>
+<div id="第1部-multi-head-self-attention-mhsa-のまとめ" class="slide section level1">
+<h1>第1部 Multi-head self-attention: MHSA のまとめ</h1>
+<ul>
+<li>自然言語処理，画像処理，強化学習，メタ学習の 4 分野でほほ同様の MHSA が取り入れられている。</li>
+<li>クエリ，キー，バリュー 各テンソルを学習することが行われている</li>
+<li>従来手法である 畳み込み や LSTM を MHSA で置き換える動きがある。</li>
+<li>ただし, SAGAN と SNAIL （non-local net） では 入力情報を concatenate して上位層に伝える点が他と異なる</li>
+</ul>
+</div>
+<div id="補足-注意が現れるに至った歴史" class="slide section level1">
+<h1>補足 注意が現れるに至った歴史</h1>
+<ul>
+<li>BOW, TFIDF<span class="citation">(Jones 1972)</span>, SMT<span class="citation">(Manning and Schuütze 1999)</span>, N-gram モデル, Dimensionality would increse w.r.t. <span class="math inline">\(V^N\)</span></li>
+<li>RNN <span class="citation">(Elman 1990)</span>,<span class="citation">(Mikolov et al. 2010)</span><span class="citation">(Mikolov et al. 2011)</span></li>
+<li>LSTM <span class="citation">(Hochreiter and Schmidhuber 1997)</span>,<span class="citation">(Gers, Schmidhuber, and Cummins 1999)</span>,<span class="citation">(Greff et al. 2015)</span>, <strong>Seq2seq</strong><span class="citation">(Sutskever, Vinyals, and Le 2014)</span>, 注意モデル<span class="citation">(Bahdanau, Cho, and Bengio 2015)</span>,</li>
+<li>Transformer <span class="citation">(Vaswani et al. 2017)</span></li>
+<li>BERT <span class="citation">(Devlin et al. 2018)</span></li>
+</ul>
+<p>それぞれ有名なので説明はしません</p>
+</div>
+<div id="第-2-部" class="slide section level1">
+<h1>第 2 部</h1>
+<p style="margin-bottom:3cm;">
+<center>
+<font size="+4"><strong>BERT 概説</strong></font>
+</center>
+</p>
+</div>
+<div id="mnih-and-graves-2014" class="slide section level1">
+<h1>Mnih and Graves (2014)</h1>
+<center>
+<img src="figures/2014MnihGraves_Fig1a.svg" style="width:33%" /> <img src="figures/2014MnihGraves_Fig1b.svg" style="width:33%" /><br/> <img src="figures/2014MnihGraves_Fig1c.svg" style="width:33%" /><br/> From <span class="citation">(Mnih et al. 2014)</span>
+</center>
+</div>
+<div id="show-and-tell-2014" class="slide section level1">
+<h1>Show and Tell (2014)</h1>
+<!--
+<center>
+![](./assets/2014Simoyaman_Fig3nocap.svg){#fig:2014Simoyaman_Fig3nocap style="width:74%"}</br>
+Weakly supervised object segmentation using ConvNets.
+</center>
+-->
+<center>
+<img src="figures/2015Xu_Show_Attend_and_Tell.svg" style="width:64%" /></br> Attention for neural image captioning <span class="citation">(Xu et al. 2015)</span>
+</center>
+</div>
+<div id="seq2seq-model" class="slide section level1">
+<h1>Seq2seq model</h1>
+<center>
+<img src="figures/2014Sutskever_S22_Fig1.svg" style="width:74%" /><br/> From <span class="citation">(Sutskever, Vinyals, and Le 2014)</span> Fig. 1, 翻訳モデル “seq2seq” の概念図
+</center>
+<p>“eos” は文末を表す。中央の “eos” の前がソース言語であり，中央の “eos” の後はターゲット言語の言語モデルである SRN の中間層への入力として用いる。</p>
+<p>注意すべきは，ソース言語の文終了時の中間層状態のみをターゲット言語の最初の中間層の入力に用いることであり， それ以外の時刻ではソース言語とターゲット言語は関係がない。 逆に言えば最終時刻の中間層状態がソース文の情報全てを含んでいるとみなしうる。 この点を改善することを目指すことが 2014 年以降盛んに行われてきた。 顕著な例が後述する <strong>双方向 RNN</strong>， <strong>LSTM</strong> 採用したり，<strong>注意</strong> 機構を導入することであった。</p>
+</div>
+<div id="seq2seq-2" class="slide section level1">
+<h1>Seq2seq (2)</h1>
+<center>
+<img src="figures/2014Sutskever_Fig2left.svg" style="width:44%" /><br/> From <span class="citation">(Sutskever, Vinyals, and Le 2014)</span> Fig. 2
+</center>
+</div>
+<div id="seq2seq-3" class="slide section level1">
+<h1>Seq2seq (3)</h1>
+<center>
+<img src="figures/2014Sutskever_Fig2right.svg" style="width:44%" /><br/> From [<span class="citation">Sutskever, Vinyals, and Le (2014)</span>} Fig. 2
+</center>
+</div>
+<div id="自然言語系の注意" class="slide section level1">
+<h1>自然言語系の注意</h1>
+<center>
+<img src="figures/2015Bahdanau_attention.jpg" style="width:30%" /> <img src="figures/2015Luong_Fig2.svg" style="width:33%" /> <img src="figures/2015Luong_Fig3.svg" style="width:33%" /><br/> 左:[<span class="citation">Bahdanau, Cho, and Bengio (2015)</span>}, 中:[<span class="citation">Luong, Pham, and Manning (2015)</span>} Fig. 2, 右:[<span class="citation">Luong, Pham, and Manning (2015)</span>} Fig. 3
+</center>
+</div>
+<div id="bert-の特徴" class="slide section level1">
+<h1>BERT の特徴</h1>
+<!-- From singularitysalon2019/nlp.tex -->
+<!--BERT の影響が大きいので，本稿でも BERT を中心に取り上げる。-->
+<p>BERT の特徴を 3 つにまとめると以下の通り</p>
+<ol style="list-style-type: decimal">
+<li>トランスフォーマー Transformer に基づく MHSA を用いた多層ニューラルネットワークモデル</li>
+<li>2 つの事前訓練: <strong>マスク化言語モデル</strong> と <strong>次文予測課題</strong></li>
+<li>Fine tuning によるマルチタスクで性能向上 <a href="https://gluebenchmark.com/leaderboard">GLUE スコアボード</a>, <a href="https://super.gluebenchmark.com/leaderboard/">SuperGLUE</a> を参照のこと</li>
+</ol>
+</div>
+<div id="bert-の入力表現" class="slide section level1">
+<h1>BERT の入力表現</h1>
+<center>
+<img src="./figures/2018Devlin_BERT_Fig2.svg" style="width:84%"><br /> 埋め込みトークンの総和，位置符号器，分離埋め込みの 3 者 From <span class="citation">(Devlin et al. 2018)</span> Fig. 2
+</center>
+</div>
+<div id="bert-の事前訓練-マスク化言語モデル" class="slide section level1">
+<h1>BERT の事前訓練: マスク化言語モデル</h1>
+<p>全入力系列のうち 15% をランダムに [MASK] トークンで置き換える</p>
+<ul>
+<li>入力はオリジナル系列を [MASK] トークンで置き換えた系列</li>
+<li>ラベル: オリジナル系列の [MASK] 部分にの正しいラベルを予測</li>
+<li>80%: オリジナル入力系列を [MASK] で置換</li>
+<li>10%: [MASK] の位置の単語をランダムな無関連語で置き換える</li>
+<li>10%: オリジナル系列</li>
+</ul>
+</div>
+<div id="bert-の事前訓練-次文予測課題" class="slide section level1">
+<h1>BERT の事前訓練: 次文予測課題</h1>
+<p>言語モデルの欠点を補完する目的，次の文を予測</p>
+<p>[SEP] トークンで区切られた 2 文入力</p>
+<ul>
+<li>入力: the man went to the store [SEP] he bought a gallon of milk.</li>
+<li>ラベル: IsNext</li>
+<li>入力: the man went to the store [SEP] penguins are flightless birds.</li>
+<li>ラベル: NotNext</li>
+</ul>
+</div>
+<div id="bert-ファインチューニング" class="slide section level1">
+<h1>BERT: ファインチューニング</h1>
+<p>(a), (b) は文レベル課題， (c),(d)はトークンレベル課題, E: 入力埋め込み表現, <span class="math inline">\(T_i\)</span>: トークン <span class="math inline">\(i\)</span> の文脈表象。</p>
+<!-- 
+- [CLS]: 分類出力記号,
+- [SEP]: 文分離記号 
+-->
+<center>
+<img src="./figures/2018Devlin_BERT_Fig3.svg" style="width:44%"><br/> From <span class="citation">(Devlin et al. 2018)</span> Fig.3
+</center>
+</div>
+<div id="glue-general-language-understanding-evaluation" class="slide section level1">
+<h1>GLUE: General Language Understanding Evaluation</h1>
+<ul>
+<li><strong>CoLA</strong>: 入力文が英語として正しいか否かを判定</li>
+<li><strong>SST-2</strong>: スタンフォード大による映画レビューの極性判断</li>
+<li><strong>MRPC</strong>: マイクロソフトの言い換えコーパス。2文 が等しいか否かを判定</li>
+<li><strong>STS-B</strong>: ニュースの見出し文の類似度を5段階で評定</li>
+<li><strong>QQP</strong>: 2 つの質問文の意味が等価かを判定</li>
+<li><strong>MNLI</strong>: 2 入力文が意味的に含意，矛盾，中立を判定</li>
+<li><strong>QNLI</strong>: Q and A</li>
+<li><strong>RTE</strong>: MNLI に似た2つの入力文の含意を判定</li>
+<li><strong>WNI</strong>: ウィノグラッド会話チャレンジ</li>
+</ul>
+<p>その他</p>
+<ul>
+<li><strong>SQuAD</strong>: スタンフォード大による Q and A ウィキペディアから抽出した文</li>
+<li><strong>RACE</strong>: 中学入試，高校入試に相当するテスト多肢選択回答 # BERT モデルの詳細</li>
+<li>データ: Wikipedia (2.5B words) + BookCorpus (800M words)</li>
+<li>バッチサイズ: 131,072 words (1024 sequences * 128 length or 256 sequences * 512 length)</li>
+<li>訓練時間: 1M steps (~40 epochs)</li>
+<li>最適化アルゴリズム: AdamW, 1e-4 learning rate, linear decay</li>
+<li>BERT-Base: 12 層, 各層 768 ニューロン, 12 多頭注意</li>
+<li>BERT-Large: 24 層, 各層 1024 ニューロン, 16 多頭注意</li>
+<li>4x4 / 8x8 TPU で 4 日間</li>
+</ul>
+<!-- # BERT ファインチューニング手続き
+<center>
+<img src="./assets/2019Devlin_mask_method21.jpg" style="width:74%"><br/>
+</center>
+ -->
+</div>
+<div id="bert-ファインチューニング手続きによる性能比較" class="slide section level1">
+<h1>BERT: ファインチューニング手続きによる性能比較</h1>
+<center>
+<img src="figures/2019Devlin_mask_method21.jpg" style="width:66%" /><br/> マスク化言語モデルのマスク化割合の違いによる性能比較
+</center>
+<p>マスク化言語モデルのマスク化割合は マスクトークン:ランダム置換:オリジナル=80:10:10 だけでなく， 他の割合で訓練した場合の 2 種類下流課題， MNLI と NER で変化するかを下図  に示した。 80:10:10 の性能が最も高いが大きな違いがあるわけではないようである。</p>
+<!-- # BERT モデルサイズ比較
+<center>
+<img src="./assets/2019Devlin_model_size20.jpg" style="width:69%"><br/>
+</center>
+ -->
+</div>
+<div id="bert-モデルサイズ比較" class="slide section level1">
+<h1>BERT: モデルサイズ比較</h1>
+<center>
+<img src="figures/2019Devlin_model_size20.jpg" style="width:59%" /><br/> モデルのパラメータ数による性能比較
+</center>
+<p>パラメータ数を増加させて大きなモデルにすれば精度向上が期待できる。 下図では，横軸にパラメータ数で MNLI は青と MRPC は赤 で描かれている。 パラメータ数増加に伴い精度向上が認められる。 図に描かれた範囲では精度が天井に達している訳ではない。パラメータ数が増加すれば精度は向上していると認められる。</p>
+<!-- # BERT モデル単方向，双方向モデル比較
+<center>
+<img src="./assets/2019Devlin_directionality19.jpg" style="width:66%"><br/>
+</center>
+
+ -->
+</div>
+<div id="bert-モデル単方向双方向モデル比較" class="slide section level1">
+<h1>BERT: モデル単方向，双方向モデル比較</h1>
+<center>
+<img src="figures/2019Devlin_directionality19.jpg" style="width:59%" /><br/> 言語モデルの相違による性能比較
+</center>
+<p>言語モデルをマスク化言語モデルか次単語予測の従来型の言語モデルによるかの相違による性能比較を 下図  に示した。 横軸には訓練ステップである。訓練が進むことでマスク化言語モデルとの差は 2 パーセントではあるが認められるようである。</p>
+<!-- # BERT 事前訓練比較
+<center>
+<img src="./assets/2019Devlin_Effect_of_Pretraining18.jpg" style="width:66%"><br/>
+</center>
+-->
+</div>
+<div id="bert-事前訓練比較" class="slide section level1">
+<h1>BERT: 事前訓練比較</h1>
+<center>
+<img src="figures/2019Devlin_Effect_of_Pretraining18.jpg" style="width:59%" /><br/> 事前訓練の効果比較
+</center>
+<p>図には事前訓練の比較を示しされている。 全ての事前訓練を用いた場合が青，次文訓練を除いた場合が赤，従来型言語モデルで次文予測課題をした場合を黄， 従来型言語モデルで次文予測課題なしを緑で描かれている。4 種類の下流課題は MNLI, QNLI, MRPC, SQuAD である。 下流のファインチューニング課題ごとに精度が分かれるようである。</p>
+<!--![](../2019document/2019Devlin_BERT_slides.pdf)-->
+<!--8. [DistilBERT](https://github.com/huggingface/pytorch-transformers/tree/master/examples/distillation)-->
+</div>
+<div id="各モデルの特徴" class="slide section level1">
+<h1>各モデルの特徴</h1>
+<ul>
+<li>RoBERTa: BERT の訓練コーパスを巨大 (173GB) にし，ミニバッチサイズを大きした</li>
+<li>XLNet: 順列言語モデル。2 ストリーム注意</li>
+<li>MT-DNN: BERT ベース の転移学習に重きをおいたモデル</li>
+<li>GPT-2: BERT に基づく。人間超えして 2019 年 2 月時点で炎上騒ぎ</li>
+<li>BERT: Transformerに基づく言語モデル。<strong>マスク化言語モデル</strong> と <strong>次文予測</strong> に基づく 事前訓練，各下流課題をファインチューニング。事前訓練されたモデルは一般公開済。</li>
+<li>DistillBERT: BERT の蒸留版</li>
+<li>ELMo: 双方向 RNN による文埋め込み表現</li>
+<li>Transformer: 自己注意に基づく言語モデル。多頭注意，位置符号器.</li>
+</ul>
+</div>
+<div id="事前訓練とマルチ課題学習" class="slide section level1">
+<h1>事前訓練とマルチ課題学習</h1>
+<center>
+<img src="./figures/mt-dnn.png" style="width:66%"><br/> From <span class="citation">(X. Liu et al. 2019)</span> Fig. 1
+</center>
+</div>
+<div id="transformer-attention-is-all-you-need" class="slide section level1">
+<h1>Transformer: Attention is all you need</h1>
+<p><span class="math display">\[\mathop{attention}\left(Q,K,V\right)=\mathop{dropout}\left(\mathop{softmax}\left(\frac{QK^\top}{\sqrt{d}
+}\right)\right)V\]</span></p>
+<center>
+<img src="./figures/2017Vaswani_Fig2_1.svg" style="width:17%"> <img src="./figures/2017Vaswani_Fig2_2.svg" style="width:23%"><br /> From <span class="citation">(Vaswani et al. 2017)</span> Fig. 2
+</center>
+<!-- 
+# Transformer(2): Attention is all you need
+
+$$
+\text{MultiHead}\left(Q,K,V\right)=\text{Concat}\left(\mathop{head}_1,\ldots,\mathop{head}_h\right)W^O
+$$
+
+where, $\text{head}_i =\text{Attention}\left(QW_i^Q,KW_i^K,VW_i^V\right)$
+
+The projections are parameter matrices
+
+- $W_i^Q\in\mathbb{R}^{d_{\mathop{model}}\times d_k}$,
+- $W_i^K \in\mathbb{R}^{d_{\mathop{model}}\times d_k}$,
+- $W_i^V\in\mathbb{R}^{d_{\mathop{model}}\times d_v}$, 
+- $W^O\in\mathbb{R}^{hd_v\times d_{\mathop{model}}}$. $h=8$
+- $d_k=d_v=\frac{d_{\mathop{model}}}{h}=64$
+
+$$\text{FFN}(x)=\max\left(0,xW_1+b_1\right)W_2+b_2$$
+
+$$\text{PE}_{(\mathop{pos},2i)} = \sin\left(\frac{\mathop{pos}}{10000^{\frac{2i}{d_{\mathop{model}}}}}\right)$$
+
+$$\text{PE}_{(\mathop{pos},2i+1)} = \cos\left(\frac{\mathop{pos}}{10000^{\frac{2i}{d_{\mathop{model}}}}}\right)$$
+ -->
+</div>
+<div id="位置符号器-position-encoders" class="slide section level1">
+<h1>位置符号器 Position encoders</h1>
+<p>トランスフォーマーの入力には，上述の単語表現に加えて，位置符号器からの信号も重ね合わされる。 位置 <span class="math inline">\(i\)</span> の信号は次式で周波数領域へと変換される:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{PE}_{(\text{pos},2i)} &amp;= \sin\left(\frac{\text{pos}}{10000^{\frac{2i}{d_{\text{model}}}}}\right)\\
+\text{PE}_{(\text{pos},2i+1)} &amp;= \cos\left(\frac{\text{pos}}{10000^{\frac{2i}{d_{\text{model}}}}}\right)
+\end{align}
+\]</span></p>
+<p>位置符号器による位置表現は，<span class="math inline">\(i\)</span> 番目の位置情報をワンホット表現するのではなく，周波数領域に変換することで周期情報を表現する試みと見なし得るだろう。</p>
+<center>
+<img src="figures/PE_example.svg" style="width:66%" /><br/> 位置符号化に用いられる符号化
+</center>
+</div>
+<div id="section" class="slide section level1">
+<h1></h1>
+このようにしてできた値を入力側と出力側で下図のように連結させたものがトランスフォーマーである。
+<center>
+<img src="figures/2017Vaswani_Fig1.svg" style="width:27%" /><br/> From <span class="citation">(Vaswani et al. 2017)</span> Fig. 1
+</center>
+<p>これまで見てきたように，トランスフォーマーでは入力信号に基づいて情報の変換が行なわれる。 この意味ではトランスフォーマーにおける 多頭 自己注意 MHSA とはボトムアップ注意の変形であるとみなしうる。 逆言すれば，RNN のように過去の履歴をすべて保持しているわけではないので，系列情報については，position encoders に頼っている側面が指摘できる。 <!-- %\input{ELMoBERTGPT_Gao2018.tex}
+へーこれでインプットか？
+--></p>
+</div>
+<div id="bert-gpt-elmo-事前訓練の違い" class="slide section level1">
+<h1>BERT, GPT, ELMo 事前訓練の違い</h1>
+<ul>
+<li>BERT: トランスフォーマー，マスク化言語モデル，次文予測課題</li>
+<li>GPT: 順方向トランスフォーマー</li>
+<li>ELMo: 双方向 RNN による中間層の連結</li>
+</ul>
+</div>
+<div id="多言語対応" class="slide section level1">
+<h1>多言語対応</h1>
+<center>
+<img src="figures/2019Lample_Fig1.svg" style="width:74%"><br/> From <span class="citation">(Lample and Conneau 2019)</span> Fig. 1
+</center>
+</div>
+<div id="bert-の発展" class="slide section level1">
+<h1>BERT の発展</h1>
+<center>
+<img src="figures/2019Rajasekharan_conver.png" style="width:54%"><br/> From https://towardsdatascience.com/a-review-of-bert-based-models-4ffdc0f15d58
+</center>
+<!-- # 埋め込みモデルによる構文解析
+<center>
+<img src="figures/2019hewitt-header.jpg" style="width:79%"><br/>
+From https://github.com/john-hewitt/structural-probes
+</center>
+
+ -->
+<!-- # under construction 従来モデルの問題点
+
+BERT の意味，文法表現を知るために，從來モデルである word2vec の単語表現概説しておく。
+各単語はワンホット onehot 表現からベクトル表現に変換するモデルを単語埋め込みモデル word embedding models あるいはベクトル表現モデル vector representation models と呼ぶ。
+下図のように各単語を多次元ベクトルとして表現する。
+
+<center>
+![](figures/2019Devlin_BERT01upper.svg){style="width:74%"}
+[@2019Devlin_BERT]  単語のベクトル表現
+</center>
+
+単語埋め込み (word2vec[@2013Mikolov_VectorSpace];[@2013Mikolov_VectorSpace]) 
+単語は周辺単語の共起情報 [点相互情報量 PMI](https://en.wikipedia.org/wiki/Pointwise_mutual_information) に基づく[@2014LevyGoldberg:nips],[@2014Levy:3cosadd]。
+すなわち周辺単語との共起情報を用いて単語の意味を定義している。
+
+<center>
+![](figures/2019Devlin_BERT01lower.svg){style="width:74%"}
+</center>
+
+形式的には，skip-gram であれ CBOW であれ同じである。
+
+# 単語埋め込みモデルの問題点
+
+単語の意味が一意に定まらない場合，ベクトル表現モデルでは対処が難しい。
+とりわけ多義語の意味を定めることは困難である。
+
+下図の単語「アップル」は果物であるか，IT 企業であるかは，その単語を単独で取り出した場合一意に定める事ができない。
+
+<center>
+![](figures/2019Devlin_BERT02upper.svg){style="widht:74%"}<br/>
+単語の意味を一意に定めることができない場合
+
+![](figures/2019Devlin_BERT02lower.svg){style="width:74%"}<br/>
+</center>
+
+単語の多義性解消のために，あるいは単語のベクトル表現を超えて，より大きな意味単位である，
+句，節，文のベクトル表現を得る努力がなされてきた。
+適切な普遍文表現ベクトルを得ることができれば，翻訳を含む多くの下流課題にとって有効だと考えられる。
+seq2seq モデルは RNN の中間層に文情報が表現されることを利用した翻訳モデルであった
+
+<center>
+![](figures/2019Devlin_BERT03.svg){style="width:74%"}<br/>
+[@2014Sutskever_Sequence_to_Sequence] より
+</center>
+
+BERT は上述の從來モデルを凌駕する性能を示した。以下では BERT の詳細を見ていくこととする。
+
+# BERT: 事前訓練とマルチ課題学習
+
+図は事前訓練と GLUE の各課題に対応するためファインチューニングを示している。
+事前訓練として図中レキシコンエンコーダと表記されている部分は，単語表現，位置符号器，文情報の 3 種類
+の信号の合成である。合成された入力信号がトランスフォーマーへ入力され事前訓練が行なわれる。
+事前訓練語，各課題毎にファインチューニングが施される。
+
+<center>
+![](figures/mt-dnn.png){style="width:89%"}<br/>
+From [@2019Liu_mt-dnn] Fig. 1
+</center>
+ -->
+</div>
+<div id="bert-埋め込みモデルによる構文解析" class="slide section level1">
+<h1>BERT: 埋め込みモデルによる構文解析</h1>
+<p>BERT の構文解析能力を下図示した。 各単語の共通空間に射影し， 単語間の距離を計算することにより構文解析木と同等の表現を得ることができることが報告されている<span class="citation">(Hewitt and Manning 2019)</span>。</p>
+<center>
+<img src="figures/2019hewitt-header.jpg" style="width:39%" />    <img src="figures/2019HewittManning_blogFig1.jpg" style="width:19%" /> <img src="figures/2019HewittManning_blogFig2.jpg" style="width:19%" /><br/> BERT による構文解析木を再現する射影空間
+</center>
+<p>From <a href="https://github.com/john-hewitt/structural-probes" class="uri">https://github.com/john-hewitt/structural-probes</a></p>
+<p>word2vec において単語間の距離は内積で定義されていた。 このことから，文章を構成する単語で張られる線形内積空間内の距離が構文解析木を与えると見なすことは不自然ではない。 <!-- 
+% > **The syntax distance hypothesis**: There exists a linear transformation
+% > $\mathbf{B}$ of the word representation space under which vector distance
+% > encodes parse trees.  Equivalently, there exists an inner product on the
+% > word representation space such that distance under the inner product
+% > encodes parse trees. This (indefinite) inner product is specified by
+% > $\mathbf{B}^{\top}\mathbf{B}$.
+
+% We'll take a particular instance of this hypothesis for our probes; 
+% we'll use the L2 distance, and let the squared vector distances equal the tree distances, but more on this later.  
+--> そこで構文解析木を再現するような射影変換を見つけることができれば BERT を用いて構文解析が可能となる。 例えば上図における chef と store と was の距離を解析木を反映するような空間を見つけ出すことに相当する。 <!-- % The distances we pointed out earlier between \_chef\_, \_store\_ and \_was\_, can be visualized in a vector space as follows, where $\mathbf{B}\in\mathbb{R}^{2\times3}$, mapping 3-dimensional word representations to a 2-dimensional space encoding syntax:
+--> <!--% Note in the image above that the distances between words before
+% transformation by $\mathbf{B}$ aren't indicative of the tree. After the
+% linear transformation, however, taking a minimum spanning tree on the
+% distances recovers the tree, as shown in the following image:
+
+% <center>
+% % ![](figures/0.332019HewittManning_blogFig2.jpg}
+% </center>
+
+% Finding a parse tree-encoding distance metric Our potentially tree-encoding distances are parametrized by the linear transformation $\mathbf{B}\in\mathbb{R}^{k\times n}$, 
+
+% \begin{equation}
+% \left\|h_i-h_j\right\|_B^2=\left(B\left(h_i-h_j\right)\right)^{\top}\left(B\left(h_i-h_j\right)\right)
+% \end{equation}
+
+% where $\mathbf{B}_h$ is the linear transformation of the word representation; equivalently, it is the parse tree node representation. 
+% This is equivalent to finding an L2 distance on the original vector space, parametrized by the positive semi-definite matrix $A=B^{\top}B$:
+
+% \begin{equation}
+% \left\|h_i-h_j\right\|_A^2=\left(h_i-h_j\right)^{\top}A\left(h_i-h_j\right)
+% \end{equation}
+% The set of linear transformations, $\mathbb{R}^{k\times n}$ for a given $k$ is the hypothesis class for our probing family.  
+% We choose $B$ to minimize the difference between true parse tree distances from a human-parsed corpus and the predicted distances from the fixed word representations transformed
+% by $B$: 
+--> 2 つの単語 <span class="math inline">\(w_i\)</span>, <span class="math inline">\(w_j\)</span> とし単語間の距離を <span class="math inline">\(d\left(w_i,w_j\right)\)</span> とする。 適当な変換を施した後の座標を <span class="math inline">\(h_i\)</span>, <span class="math inline">\(h_j\)</span> とすれば，求める変換 <span class="math inline">\(B\)</span> は次式のような変換を行なうことに相当する: <span class="math display">\[
+\min_{B}\sum_l\frac{1}{\left|s_\ell\right|^2}\sum_{i,j}\left(d\left(w_i,w_j\right)-\left\|B\left(h_i-h_j
+\right)\right\|^2\right)
+\]</span> ここで <span class="math inline">\(\ell\)</span> は文 s の訓練文のインデックスであり，各文の長さで規格化することを意味している。</p>
+<!--% where $\ell$ indexes the sentences $s_{\ell}$ in the corpus, and $\frac{1}{\left|s_\ell\right|^2}$ normalizes for the number of pairs of words in each sentence. 
+% Note that we do actually attempt to minimize the difference between the squared distance $\left\|h_i-h_j\right\|_B^2$ and the tree distance. 
+% This means that the actual vector distance $\left\|h_i-h_j\right\|_B$ will always be off from the true parse tree distances, but the tree information encoded is identical, and we found that optimizing with the squared distance performs considerably better in practice.
+
+% Finding a parse depth-encoding norm As a second application of our method, we note that the directions of the edges in a parse tree is determined by the depth of words in the parse tree; the deeper node in the governance relationship is the governed word. The depth in the parse tree is like a norm, or length, defining a total order on the nodes in the tree. We denote this tree depth norm $\left\|w_i\right\|$.
+
+% Likewise, vector spaces have natural norms; our hypothesis for norms is that there exists a linear transformation under which tree depth norm is encoded by the squared L2 vector norm $\left\|Bh_i\right\|_2^2$. 
+% Just like  for the distance hypothesis, we can find the linear transformation under which the depth norm hypothesis is best-approximated:
+
+% \begin{equation}
+% \min_B\sum_\ell\frac{1}{\left|s_\ell\right|}\sum_i\left(\left\|w_i\right\|-\left\|Bh_i\right\|^2\right)
+% \end{equation}
+
+% To be effective, the manual should follow three key principles:
+% \begin{enumerate}
+% -  It should be simple and write on a single page, e.g. as a bulleted list of operating procedures.
+% -  It should be prioritised in a strategic order that you can start executing tomorrow.
+% -  It should be reviewed, evaluated, and understood by everyone crucial to the mission.
+% \end{enumerate}
+-->
+</div>
+<div id="bert-実装" class="slide section level1">
+<h1>BERT 実装</h1>
+<p>BERT 実装のパラメータを以下に示した。 現在配布されている BERT-base あるいは性能が良い BERT-large は各層のニューロン数と全体の層数である。</p>
+<ul>
+<li>データ: Wikipedia (2.5B words) + BookCorpus (800M words)</li>
+<li>バッチサイズ: 131,072 words (1024 sequences <span class="math inline">\(\times\)</span> 128 length or 256 sequences <span class="math inline">\(\times\)</span> 512 length)</li>
+<li>訓練ステップ: 1M steps (40 epochs)</li>
+<li>最適化アルゴリズム: AdamW, 1e-4 learning rate, linear decay</li>
+<li>BERT-Base: 12 層, 各層 768 ニューロン, 12 多頭注意</li>
+<li>BERT-Large: 24 層, 各層 1024 ニューロン, 16 多頭注意</li>
+<li>訓練時間: 4x4 / 8x8 の TPU で 4 日間</li>
+</ul>
+</div>
+<div id="lstm" class="slide section level1">
+<h1>LSTM</h1>
+<center>
+<img src="figures/2015Greff_LSTM_ja.svg" style="width:33%" />             <img src="figures/ModalNet-19.png" style="width:16%" /><br/> 左: LSTM (浅川, 2015) より，右: トランスフォーマー<span class="citation">(Vaswani et al. 2017)</span><br/> 入力ゲートと入力 は Q, K と同一視，出力ゲートと V とは同一視可能？
+</center>
+</div>
+<div id="bert-embeddings" class="slide section level1">
+<h1>BERT embeddings</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">class</span> BertEmbeddings(nn.Module):</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="co">&quot;&quot;&quot;Construct the embeddings from word, position and token_type embeddings.</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, config):</span>
+<span id="cb1-6"><a href="#cb1-6"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb1-7"><a href="#cb1-7"></a>        <span class="va">self</span>.word_embeddings <span class="op">=</span> nn.Embedding(config.vocab_size, config.hidden_size, padding_idx<span class="op">=</span>config.pad_token_id)</span>
+<span id="cb1-8"><a href="#cb1-8"></a>        <span class="va">self</span>.position_embeddings <span class="op">=</span> nn.Embedding(config.max_position_embeddings, config.hidden_size)</span>
+<span id="cb1-9"><a href="#cb1-9"></a>        <span class="va">self</span>.token_type_embeddings <span class="op">=</span> nn.Embedding(config.type_vocab_size, config.hidden_size)</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a>        <span class="co"># self.LayerNorm is not snake-cased to stick with TensorFlow model variable name and be able to load</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>        <span class="co"># any TensorFlow checkpoint file</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>        <span class="va">self</span>.LayerNorm <span class="op">=</span> BertLayerNorm(config.hidden_size, eps<span class="op">=</span>config.layer_norm_eps)</span>
+<span id="cb1-14"><a href="#cb1-14"></a>        <span class="va">self</span>.dropout <span class="op">=</span> nn.Dropout(config.hidden_dropout_prob)</span>
+<span id="cb1-15"><a href="#cb1-15"></a></span>
+<span id="cb1-16"><a href="#cb1-16"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, input_ids<span class="op">=</span><span class="va">None</span>, token_type_ids<span class="op">=</span><span class="va">None</span>, position_ids<span class="op">=</span><span class="va">None</span>, inputs_embeds<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb1-17"><a href="#cb1-17"></a>        <span class="cf">if</span> input_ids <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb1-18"><a href="#cb1-18"></a>            input_shape <span class="op">=</span> input_ids.size()</span>
+<span id="cb1-19"><a href="#cb1-19"></a>        <span class="cf">else</span>:</span>
+<span id="cb1-20"><a href="#cb1-20"></a>            input_shape <span class="op">=</span> inputs_embeds.size()[:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb1-21"><a href="#cb1-21"></a></span>
+<span id="cb1-22"><a href="#cb1-22"></a>        seq_length <span class="op">=</span> input_shape[<span class="dv">1</span>]</span>
+<span id="cb1-23"><a href="#cb1-23"></a>        device <span class="op">=</span> input_ids.device <span class="cf">if</span> input_ids <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> inputs_embeds.device</span>
+<span id="cb1-24"><a href="#cb1-24"></a>        <span class="cf">if</span> position_ids <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb1-25"><a href="#cb1-25"></a>            position_ids <span class="op">=</span> torch.arange(seq_length, dtype<span class="op">=</span>torch.<span class="bu">long</span>, device<span class="op">=</span>device)</span>
+<span id="cb1-26"><a href="#cb1-26"></a>            position_ids <span class="op">=</span> position_ids.unsqueeze(<span class="dv">0</span>).expand(input_shape)</span>
+<span id="cb1-27"><a href="#cb1-27"></a>        <span class="cf">if</span> token_type_ids <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb1-28"><a href="#cb1-28"></a>            token_type_ids <span class="op">=</span> torch.zeros(input_shape, dtype<span class="op">=</span>torch.<span class="bu">long</span>, device<span class="op">=</span>device)</span>
+<span id="cb1-29"><a href="#cb1-29"></a></span>
+<span id="cb1-30"><a href="#cb1-30"></a>        <span class="cf">if</span> inputs_embeds <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb1-31"><a href="#cb1-31"></a>            inputs_embeds <span class="op">=</span> <span class="va">self</span>.word_embeddings(input_ids)</span>
+<span id="cb1-32"><a href="#cb1-32"></a>        position_embeddings <span class="op">=</span> <span class="va">self</span>.position_embeddings(position_ids)</span>
+<span id="cb1-33"><a href="#cb1-33"></a>        token_type_embeddings <span class="op">=</span> <span class="va">self</span>.token_type_embeddings(token_type_ids)</span>
+<span id="cb1-34"><a href="#cb1-34"></a></span>
+<span id="cb1-35"><a href="#cb1-35"></a>        embeddings <span class="op">=</span> inputs_embeds <span class="op">+</span> position_embeddings <span class="op">+</span> token_type_embeddings</span>
+<span id="cb1-36"><a href="#cb1-36"></a>        embeddings <span class="op">=</span> <span class="va">self</span>.LayerNorm(embeddings)</span>
+<span id="cb1-37"><a href="#cb1-37"></a>        embeddings <span class="op">=</span> <span class="va">self</span>.dropout(embeddings)</span>
+<span id="cb1-38"><a href="#cb1-38"></a>        <span class="cf">return</span> embeddings</span></code></pre></div>
+</div>
+<div id="bert-inside" class="slide section level1">
+<h1>BERT inside</h1>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python numberLines lineAnchors"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>        query_layer <span class="op">=</span> <span class="va">self</span>.transpose_for_scores(mixed_query_layer)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>        key_layer <span class="op">=</span> <span class="va">self</span>.transpose_for_scores(mixed_key_layer)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>        value_layer <span class="op">=</span> <span class="va">self</span>.transpose_for_scores(mixed_value_layer)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>        <span class="co"># Take the dot product between &quot;query&quot; and &quot;key&quot; to get the raw attention scores.</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>        attention_scores <span class="op">=</span> torch.matmul(query_layer, key_layer.transpose(<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">2</span>))</span>
+<span id="cb2-7"><a href="#cb2-7"></a>        attention_scores <span class="op">=</span> attention_scores <span class="op">/</span> math.sqrt(<span class="va">self</span>.attention_head_size)</span>
+<span id="cb2-8"><a href="#cb2-8"></a>        <span class="cf">if</span> attention_mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb2-9"><a href="#cb2-9"></a>            <span class="co"># Apply the attention mask is (precomputed for all layers in BertModel forward() function)</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>            attention_scores <span class="op">=</span> attention_scores <span class="op">+</span> attention_mask</span>
+<span id="cb2-11"><a href="#cb2-11"></a></span>
+<span id="cb2-12"><a href="#cb2-12"></a>        <span class="co"># Normalize the attention scores to probabilities.</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>        attention_probs <span class="op">=</span> nn.Softmax(dim<span class="op">=-</span><span class="dv">1</span>)(attention_scores)</span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a>        <span class="co"># This is actually dropping out entire tokens to attend to, which might</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>        <span class="co"># seem a bit unusual, but is taken from the original Transformer paper.</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>        attention_probs <span class="op">=</span> <span class="va">self</span>.dropout(attention_probs)</span>
+<span id="cb2-18"><a href="#cb2-18"></a></span>
+<span id="cb2-19"><a href="#cb2-19"></a>        <span class="co"># Mask heads if we want to</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>        <span class="cf">if</span> head_mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb2-21"><a href="#cb2-21"></a>            attention_probs <span class="op">=</span> attention_probs <span class="op">*</span> head_mask</span>
+<span id="cb2-22"><a href="#cb2-22"></a></span>
+<span id="cb2-23"><a href="#cb2-23"></a>        context_layer <span class="op">=</span> torch.matmul(attention_probs, value_layer)</span></code></pre></div>
+</div>
+<div id="第-3-部" class="slide section level1">
+<h1>第 3 部</h1>
+<p style="margin-bottom:3cm;">
+<center>
+<font size="+4"><strong>流行りの句</strong></font>
+</center>
+</p>
+</div>
+<div id="流行りの句" class="slide section level1">
+<h1>流行りの句</h1>
+<center>
+<!-- ![](figures/2019Michel_Levy_Neubig_abstract.svg){style="width:30%"} -->
+<img src="figures/2020Kitaev_Reformer_page1.svg" style="width:44%" /> <img src="figures/2019Cordonnier_abstract.svg" style="width:44%" />
+</center>
+</div>
+<div id="流行りの句-continued." class="slide section level1">
+<h1>流行りの句 (continued.)</h1>
+<center>
+<img src="figures/2019yun_abstract.svg" style="width:44%" /> <!-- ![](figures/2019Michel_Levy_Neubig_abstract.svg){style="width:30%"} --> <img src="figures/2019Sanh_DistilBERT_page1.svg" style="width:44%" />
+</center>
+</div>
+<div id="residual-attention" class="slide section level1">
+<h1>Residual attention</h1>
+<center>
+<img src="figures/2017residual_attention.svg" style="width:29%" /> <img src="figures/2017residual_attention_motivation.svg" style="width:49%" /><br/> <img src="figures/2017residual_attention_whole_net.svg" style="width:74%" /><br/> <span class="citation">(Wang et al. 2017)</span> Fig. 1, 2, 3
+</center>
+</div>
+<div id="a2-net" class="slide section level1">
+<h1>A2 net</h1>
+<center>
+<img src="figures/2018Chen_A2-Nets_fig1ja_a.svg" style="width:39%" />          <img src="figures/2018Chen_A2-Nets_fig1ja_b.svg" style="width:55%" /><br/> From <span class="citation">(Chen et al. 2018)</span> Fig. 1
+</center>
+</div>
+<div id="distilbert" class="slide section level1">
+<h1>DistilBERT</h1>
+<center>
+<img src="figures/2019distilBERT_fig.svg" style="width:30%" /><br/>
+</center>
+<p>3 つの損失関数<span class="citation">(Sanh et al. 2020)</span>:</p>
+<ol style="list-style-type: decimal">
+<li>知識蒸留損失</li>
+<li>マスク化言語モデル損失</li>
+<li>コサイン損失</li>
+</ol>
+</div>
+<div id="relationship-between-self-attention-and-convolution" class="slide section level1">
+<h1>Relationship between self-attention and convolution</h1>
+<center>
+<img src="figures/2019cordonnier_self_attention_convol.svg" style="width:44%" /><br/> <img src="figures/2020Cordonnier_tab3.svg" style="width:49%" /><br/> From <span class="citation">(Cordonnier, Loukas, and Jaggi 2020)</span>
+</center>
+</div>
+<div id="ここまでのまとめ" class="slide section level1">
+<h1>ここまでのまとめ</h1>
+<ul>
+<li>MHSA は 畳み込み と同等の能力がありそうである。</li>
+<li>Reformer に見られるように position encodings を工夫する余地は残されているように思われる。</li>
+</ul>
+</center>
+</div>
+<div id="文献" class="slide section level1 unnumbered">
+<h1 class="unnumbered">文献</h1>
+<div id="refs" class="references hanging-indent">
+<div id="ref-2014Bahdanau_NMT">
+<p>Bahdanau, Dzmitry, Kyunghyun Cho, and Yoshua Bengio. 2015. “Neural Machine Translation by Jointly Learning to Align and Translate.” In <em>Proceedings in the International Conference on Learning Representations (ICLR)</em>, edited by Yoshua Bengio and Yann LeCun. San Diego, CA, USA. <a href="http://arxiv.org/abs/1409.0473">http://arxiv.org/abs/1409.0473</a>.</p>
+</div>
+<div id="ref-2018Chen_A2-nets_double_attention">
+<p>Chen, Yunpeng, Yannis Kalantidis, Jianshu Li, Shuicheng Yan, and Jiashi Feng. 2018. “<span class="math inline">\(A^2\)</span>-Nets: Double Attention Networks.” In <em>Advances in Neural Information Processing Systems 31</em>, edited by S. Bengio, H. Wallach, H. Larochelle, K. Grauman, N. Cesa-Bianchi, and R. Garnett, 352–61. Curran Associates, Inc. <a href="http://papers.nips.cc/paper/7318-a2-nets-double-attention-networks.pdf">http://papers.nips.cc/paper/7318-a2-nets-double-attention-networks.pdf</a>.</p>
+</div>
+<div id="ref-2020cordonnier_attention_and_convolution">
+<p>Cordonnier, Jean-Baptiste, Andreas Loukas, and Martin Jaggi. 2020. “ON the Relationship Between Self-Attention and Convolutional Layers.” <em>ArXiv Preprint</em> [cs.LG] (1911.035842). <a href="https://arxiv.org/1911.03584/">https://arxiv.org/1911.03584/</a>.</p>
+</div>
+<div id="ref-2018BERT">
+<p>Devlin, Jacob, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2018. “BERT: Pre-Training of Deep Bidirectional Transformers for Language Understanding.” <em>arXiv Preprint</em>.</p>
+</div>
+<div id="ref-Elman1990">
+<p>Elman, Jeffrey L. 1990. “Finding Structure in Time.” <em>Cognitive Science</em> 14: 179–211.</p>
+</div>
+<div id="ref-1999Gers">
+<p>Gers, Fleix A., Jürgen Schmidhuber, and Fred Cummins. 1999. “Learning to Forget: Continual Prediction with LSTM.” In <em>Artificial Neural Networks ICANN 99. Ninth International Conference on</em>, 2:850–55. Edinburgh, Scotland.</p>
+</div>
+<div id="ref-2014Graves_NeuralTuringMachines">
+<p>Graves, Alex, Greg Wayne, and Ivo Danihelka. 2014. “Neural Turing Machines.” <em>ArXiv:1410.5401</em>. <a href="http://arxiv.org/abs/1410.5401v1">http://arxiv.org/abs/1410.5401v1</a>.</p>
+</div>
+<div id="ref-2015LSTM_SpaceOdessy">
+<p>Greff, Klaus, Rupesh Kumar Srivastava, Jan Koutník, Bas R. Steunebrink, and Jürgen Schmidhuber. 2015. “LSTM: A Search Space Odyssey.” <em>ArXiv:1503.04069</em>.</p>
+</div>
+<div id="ref-2019HewittManning_structural">
+<p>Hewitt, John, and Christopher D. Manning. 2019. “A Structural Probe for Finding Syntax in Word Representations.” In <em>Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)</em>, 4129–38. Minneapolis, Minnesota: Association for Computational Linguistics. <a href="https://doi.org/10.18653/v1/N19-1419">https://doi.org/10.18653/v1/N19-1419</a>.</p>
+</div>
+<div id="ref-1997LSTM">
+<p>Hochreiter, Sepp, and Jürgen Schmidhuber. 1997. “Long Short-Term Memory.” <em>Neural Computation</em> 9: 1735–80.</p>
+</div>
+<div id="ref-1972Jones_tfidf">
+<p>Jones, Karen Spärck. 1972. “A Statistical Interpretation of Term Specificity and Its Application in Retrieval.” <em>Journal of Documentation</em> 28 (1): 11–21.</p>
+</div>
+<div id="ref-2019Kim_U-GAT-IT">
+<p>Kim, Junho, Minjae Kim, Hyeonwoo Kang, and Kwanghee Lee. 2019. “U-GAT-IT: Unsupervised Generative Attentional Networks with Adaptive Layer-Instance Normalization for Image-to-Image Translation.” <em>ArXiv Preprint</em> [cs.CV] (1907.10830).</p>
+</div>
+<div id="ref-2019Lample_Cross-lingual">
+<p>Lample, Guillaume, and Alexis Conneau. 2019. “Cross-Lingual Language Model Pretraining.” <em>ArXiv Preprint</em> 1901.07291v1 [cs.CL].</p>
+</div>
+<div id="ref-2019Liu_mt-dnn">
+<p>Liu, Xiaodong, Pengcheng He, Weizhu Chen, and Jianfeng Gao. 2019. “Multi-Task Deep Neural Networks for Natural Language Understanding.” In <em>Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics</em>, 4487–96. Florence, Italy: Association for Computational Linguistics.</p>
+</div>
+<div id="ref-2019RoBERTa">
+<p>Liu, Yinhan, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettlemoyer, and Veselin Stoyanov. 2019. “RoBERTa: A Robustly Optimized Bert Pretraining Approach.” <em>ArXiv Preprint</em>.</p>
+</div>
+<div id="ref-2015Luong_attention">
+<p>Luong, Minh-Thang, Hieu Pham, and Christopher D. Manning. 2015. “Effective Approaches to Attention-Based Neural Machine Translation.” <em>ArXiv Preprint</em> cs.CL: 1508.04025.</p>
+</div>
+<div id="ref-1999Manning">
+<p>Manning, Christopher D., and Hinrich Schuütze. 1999. <em>Foundations of Statistical Natural Language Processing</em>. Cambridge, MA, USA: MIT press.</p>
+</div>
+<div id="ref-2011Mikolov">
+<p>Mikolov, Tomaś, Stefan Kombrink, Lukaś Burget, Jan “Honza" Černocký, and Sanjeev Khudanpur. 2011. “Extensions of Recurrent Neural Network Language Model.” In <em>IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)</em>. Prague, Czech Republic.</p>
+</div>
+<div id="ref-2010Mikolov">
+<p>Mikolov, Tomáš, Martin Karafiát, Lukáš Burget, Jan “Honza” Černocký, and Sanjeev Khudanpur. 2010. “Recurrent Neural Network Based Language Model.” In <em>Proceedings of INTERSPEECH2010</em>, edited by Takao Kobayashi, Keiichi Hirose, and Satoshi Nakamura, 1045–8. Makuhari, JAPAN.</p>
+</div>
+<div id="ref-2018Mishra_SNAIL">
+<p>Mishra, Nikhil, Mostafa Rohaninejad, Xi Chen, and Pieter Abbeel. 2018. “A Simple Neural Attentive Meta-Learner.” <em>ArXiv Preprint</em> [cs.AI] (1707.03141).</p>
+</div>
+<div id="ref-2014Mnih_RNN_attention">
+<p>Mnih, Volodymyr, Nicolas Heess, Alex Graves, and Koray Kavukcuoglu. 2014. “Recurrent Models of Visual Attention.” In <em>Advances in Neural Information Processing Systems 27</em>, edited by Zoubin Ghahramani, Max Welling, C. Cortes, N. D. Lawrence, and K. Q. Weinberger, 2204–12. Curran Associates, Inc. <a href="http://papers.nips.cc/paper/5542-recurrent-models-of-visual-attention.pdf">http://papers.nips.cc/paper/5542-recurrent-models-of-visual-attention.pdf</a>.</p>
+</div>
+<div id="ref-2019Ramachandran_attention_vision">
+<p>Ramachandran, Prajit, Niki Parmar, Ashish Vaswani, Irwan Bello, Anselm Levskaya, and Jonathon Shlens. 2019. “Stand-Alone Self-Attention in Vision Models.” <em>ArXiv Preprint</em> [cs.CV] (1906.05909). <a href="https://arxiv.org/1906.059009/">https://arxiv.org/1906.059009/</a>.</p>
+</div>
+<div id="ref-2020Sanh_distilBERT">
+<p>Sanh, Victor, Lysandre Debut, Julien Chaumond, and Thomas Wolf. 2020. “DistilBERT, a Distilled Version of Bert: Smaller, Faster, Cheaper and Lighter.” <em>ArXiv Preprint</em>. <a href="https://arXiv.org/1910.01108">https://arXiv.org/1910.01108</a>.</p>
+</div>
+<div id="ref-2014Sutskever_Sequence_to_Sequence">
+<p>Sutskever, Ilya, Oriol Vinyals, and Quoc V. Le. 2014. “Sequence to Sequence Learning with Neural Networks.” In <em>Advances in Neural Information Processing Systems (NIPS)</em>, edited by Zoubin Ghahramani, M. Welling, C. Cortes, N. D. Lawrence, and K. Q. Weinberger, 27:3104–12. Montreal, BC, Canada. <a href="http://arxiv.org/abs/1409.3215v3">http://arxiv.org/abs/1409.3215v3</a>.</p>
+</div>
+<div id="ref-2017Vaswani_transformer">
+<p>Vaswani, Ashish, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, and Łukasz Kaiser. 2017. “Attention Is All You Need.” <em>arXiv Preprint</em> [cs.CL] (1706.03762).</p>
+</div>
+<div id="ref-2017Wang_residual_attention">
+<p>Wang, Fei, Mengqing Jiang, Chen Qian, Shuo Yang, and Cheng Li. 2017. “Residual Attention Network for Image Classification.” In <em>Proceedings of International Conference of Computer Vision (ICCV), IEEE International Conference</em>. Venice, Italy.</p>
+</div>
+<div id="ref-2018Wang_Girshick_Non-local">
+<p>Wang, Xiaolong, Ross Girshick, Abhinav Gupta, and Kaiming He. 2018. “Non-Local Neural Networks.” <em>ArXiv Preprint</em> [cs.CV]. <a href="https://arxiv.org/1711.07971">https://arxiv.org/1711.07971</a>.</p>
+</div>
+<div id="ref-2015Xu_Bengio_NIC_attention">
+<p>Xu, Kelvin, Jimmy Lei Ba, Ryan Kiros, Kyunghyun Cho, Aaron Courville, Ruslan Salakhutdinov, Richard S. Zemel, and Yoshua Bengio. 2015. “Show, Attend and Tell: Neural Image Caption Generation with Visual Attention.” <em>ArXiv:1502.03044</em>.</p>
+</div>
+<div id="ref-2019Zhang_Goodfellow_SAGAN">
+<p>Zhang, Han, Ian Goodfellow, Dimitris Metaxas, and Augustus Odena. 2019. “Self-Attention Generative Adversarial Networks.” <em>ArXiv Preprint</em> [stat.ML] (1805.08318).</p>
+</div>
+</div>
+</div>
+</body>
+</html>
