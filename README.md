@@ -39,10 +39,10 @@ $ git branch -d ブランチ名
 - 環境により異なると思いますのでその都度調べてください．以下はmacOS Catalinaの場合です．  
 - 最初にやっておくこと．  
 
-command line toolsのインストール
+command line tools のインストール
 
 ```bash
-$ cd project-ccap.github.io.git
+$ cd jpa-bert.github.io.git
 $ gem install bundler
 $ bundle init
 $ vim Gemfile (他のテキストエディアでも可)
@@ -55,7 +55,7 @@ $ bundle install
 - 以下を実行するとローカルでサーバが立ち上がるので，ブラウザでhttp://localhost:4000/ にアクセスする．  
 
 ```bash
-$ cd project-ccap.github.io.git
+$ cd jpa-bert.github.io.git
 $ bundle exec jekyll serve
 ```
 
