@@ -6,6 +6,7 @@
 
 - [Colab notebooks ソースコード置き場](notebooks)
 - [簡単なデモ置き場](playground)
+- [スライド](slides)
 
 ---
 
