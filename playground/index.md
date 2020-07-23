@@ -4,4 +4,4 @@
 
 - [TensorFlow Playgournd ニューラルネットワークの基本](/tensorflow-playground)
 - [リカレントニューラルネットワークによる文字ベース言語モデル Javascript](https://komazawa-deep-learning.github.io/character_demo.html)
-- [t-SNE の誤読](/2017distillpub_post--misread-tsne/public/index.html)
+- [t-SNE の誤読](/misread-tsne/public/index.html)
