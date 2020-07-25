@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Colab についての蘊蓄 | jpa-bert.github.io</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Colab についての蘊蓄" />
+<meta name="author" content="浅川伸一" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="for 2020jpa tutorial workshop" />
+<meta property="og:description" content="for 2020jpa tutorial workshop" />
+<link rel="canonical" href="http://localhost:4000/supp01_colab.html" />
+<meta property="og:url" content="http://localhost:4000/supp01_colab.html" />
+<meta property="og:site_name" content="jpa-bert.github.io" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-08-31T00:00:00+09:00" />
+<script type="application/ld+json">
+{"headline":"Colab についての蘊蓄","url":"http://localhost:4000/supp01_colab.html","dateModified":"2019-08-31T00:00:00+09:00","datePublished":"2019-08-31T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/supp01_colab.html"},"author":{"@type":"Person","name":"浅川伸一"},"description":"for 2020jpa tutorial workshop","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="jpa-bert.github.io" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">jpa-bert.github.io</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Welcome to JPA BERT</a><a class="page-link" href="/python_numpy_intro_ja.html">Python, NumPyチュートリアル</a><a class="page-link" href="/supp01_colab.html">Colab についての蘊蓄</a><a class="page-link" href="/supp02_colab_file_management.html">Colab 操作の基本</a><a class="page-link" href="/supp05_cnn.html">CNN についての蘊蓄</a><a class="page-link" href="/supp06_rnn.html">RNN リカレントニューラルネットワークについての蘊蓄</a><a class="page-link" href="/supp07_nlp.html">自然言語処理</a><a class="page-link" href="/notebooks/">notebook 置き場</a><a class="page-link" href="/playground/">Playground</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Colab についての蘊蓄</h1>
+  </header>
+
+  <div class="post-content">
+    <p>以下に <code class="language-plaintext highlighter-rouge">Colab</code> の特徴を列挙します</p>
+
+<ol>
+  <li>クラウド上の計算機資源</li>
+  <li>無料</li>
+  <li>ブラウザ上で実行可能な Jupyter ノートブック環境</li>
+  <li>TPU, GPU の実行環境も提供</li>
+</ol>
+
+<!--
+!wget outline-map-of-world-asia-and-australia-centered-vector-22634211.jpg
+![](../assets/outline-map-of-world-asia-and-australia-centered-vector-22634211.jpg)
+-->
+
+<center>
+
+<img src="/assets/map01.svg" /><br />
+<p align="left" style="width:84%">
+`Colab` はクラウド上の計算機資源。従って手元の PC に保存されているデータを直接利用できない。
+同様に計算結果を保存するためには別の保存場所，クラウドドライブや PC などに転送する必要が生ずる。
+</p>
+</center>
+
+<p>クラウド上で無料で利用可能な実行環境です。そのため，以下のような長所があります。</p>
+
+<ol>
+  <li><strong>面倒なインストール作業が不要</strong></li>
+  <li>したがって <strong>複雑なライブラリの依存関係に悩む必要がない</strong></li>
+  <li><strong>ブラウザ上で実行可能</strong> そのために直感的な操作感が偉える</li>
+</ol>
+
+<p>一方短所としては以下の点が挙げられます。</p>
+
+<ol>
+  <li>自身のデータを用いる場合にはアップロード/ダウンロードの作業が発生する</li>
+  <li>逆に言えば何もしなければ，どこにも保存されない</li>
+  <li>Google の都合で勝手にライブラリがアップデートされる。そのため以前動作したプログラムがバージョンの不一致を起こす場合がある</li>
+  <li>一定時間何もしないと切断される</li>
+  <li>Google Chrome での実行が推奨される。<font color="gray">Google 社製だけに排他的な側面があります</font></li>
+</ol>
+
+<p>本特別企画では長所が短所を凌駕すると判断し <code class="language-plaintext highlighter-rouge">Colab</code> を用いることにいたします。</p>
+
+<h1 id="python-について">Python について</h1>
+
+<p>本チュートリアル実習では，言語パイソン (
+<a href="https://www.python.org/" target="_blank">python</a>) のブラウザ上での実行環境 
+ジュピターノートブック (<a href="https://jupyter.org" target="_blank">jupyter notebook</a>) を用います。
+Jupyter notebook はそれぞれの PC 上で実行する環境です。
+この実行環境をクラウド上で実行する環境を <code class="language-plaintext highlighter-rouge">Colab</code> と呼びます。</p>
+
+<p>Python はコンピュータ言語の一つです。
+本実習ではコンピュータ言語 python の書式や使い方については深入りしません。
+<a href="https://insights.stackoverflow.com/trends?tags=python%2Cjavascript%2Cjava%2Cc%23%2Cphp%2Cc%2B%2B" target="_blank">Stackoverflow における言語トレンド</a>
+ も見てください<sup id="fnref:stackoverflow"><a href="#fn:stackoverflow" class="footnote">1</a></sup>。</p>
+
+<p>Python を採用する理由は業界標準 (de facto standard) であることです。
+ディープラーニングを実装するアルゴリズムは python で書かれるようになりました。
+Python はコンピュータ言語の一つですから，他のコンピュータ言語と遜色は有りません。
+他のコンピュータ言語との大きな相違は，共有可能なプログラム —ライブラリやフレームワークと言ったりする— が揃っていることです。
+新しいアルゴリズムを発表する場合，既存のライブラリを用いて構築することで誤りも減ります。
+また使ってもらえる可能性も高まります</p>
+
+<p>逆に言えば，python を覚えただけではディープラーニング技術に精通したことになりません。
+python で動作する業界標準とみなされているフレームワーク，ライブラリ，プログラムを知っている必要があります。</p>
+
+<p>ディープラーニングに特化した python で動作するディープラーニング用のライブラリ 3 つについて言及します。</p>
+
+<ol>
+  <li><a target="_blank" href="https://keras.io/">Keras<a></a></a></li>
+  <li><a target="_blank" href="https://pytorch.org/">PyTorch</a></li>
+  <li><a target="_blank" href="https://www.tensorflow.org">TensorFlow</a></li>
+</ol>
+
+<p>上記 3 つ以外にも多くのライブラリ，フレームワークがあります。
+次図をご覧ください:</p>
+
+<div align="center">
+<img src="/assets/2020-0715git_starhistory1.png" style="width:84%" />
+</div>
+
+<p>この図は 2020 年 7 月 15 日時点での，プログラムのソースコード共有サイト <a target="_blank" href="https://github.com/">GitHub</a> における，ディープラーニングの実装を扱うフレームワークの代表的なものを取り上げ，それらの星の数を横軸の時間の関数としてプロットしたものです。
+図から TensorFlow が他を圧倒していることが分かります。
+TensorFlow 以外の星の数が，TensorFlow の数によって分かりにくいので，TensorFlow を除いて
+同じグラフを描いたものが下図です。</p>
+
+<div align="center">
+<img src="/assets/2020-0715git_starhistory2.png" style="width:84%" />
+</div>
+
+<p>上図によれば，keras の数が多いことが分かります。
+Keras に加えて，keras を 追いかけるように上昇しているの曲線が見て取れます。
+このカーブが PyTorch です。</p>
+
+<p>上 2 図から TensorFlow, Keras, PyTorch の順に “星の数” が多いすなわち人気が高いことが分かります。</p>
+
+<p>Keras は TensorFlow を扱いやすいようにするためのライブラリです。
+従って Keras では裏 “バックエンド” で TensorFlow が動作している場合が多いです。
+多くのユーザの要望を取り入れて大きく高機能となった TensorFlow を覚えるよりも，とりかかり易い手軽な keras を使った方が初学者には敷居が低くて良いと思われます。
+TensorFlow 側でも keras の学習容易性という特徴を重視して TensorFlow に keras を取り込んでいます。
+2020 年に公開された TensorFlow 2.0 では Keras が取り込まれました。
+Keras 単体としての更新は 凍結されています。</p>
+
+<p>一方，PyTorch は TensorFlow と Keras の 2 つのフレームワークとは独立のフレームワークです。
+コーネル大学の論文のリポジトリサイト “<a href="https://arxiv.org" target="_blank">arXiv</a>”
+などで発表される論文では PyTorch が支配的です<sup id="fnref:my_opinion01"><a href="#fn:my_opinion01" class="footnote">2</a></sup>。まとめると次のことが言えるでしょう。</p>
+
+<ol>
+  <li>人気は TensorFlow が圧倒的だが</li>
+  <li>手軽に試すには簡単な keras が好まれ</li>
+  <li>研究ベースでは PyTorch が選好される</li>
+</ol>
+
+<h1 id="colaboratory-事始め">Colaboratory 事始め</h1>
+
+<ul>
+  <li>Google Colaboratory は jupyeter notebook をご存知であれば，ほぼ使い方は同じです。
+    <ul>
+      <li>notebook は セル と呼ばれる単位から成り立っています。</li>
+      <li>セルは コード，テキスト，画像で構成されます。</li>
+      <li>クラウドベースの実行系ですので，インストールの手間は不要です。</li>
+      <li>Google Doc に保存可能で Google Drvie 経由シェアできます</li>
+      <li>テキストはマークダウン形式で書きます</li>
+    </ul>
+  </li>
+  <li>ブラウザを立ち上げて <a target="_blank" href="https://colab.research.google.com/notebooks/welcome.ipynb?hl=ja"><a href="https://colab.research.google.com/notebooks/welcome.ipynb?hl=ja">https://colab.research.google.com/notebooks/welcome.ipynb?hl=ja</a> にアクセスしてください。</a></li>
+  <li>
+    <p><a target="_blank" href="https://youtu.be/inN8seMm7UI">Google Colaboratory のチュートリアルビデオ</a> も参照してください</p>
+  </li>
+  <li><a target="_blank" href="https://colab.research.google.com/notebooks/basic_features_overview.ipynb">Colab の基本的な操作法</a></li>
+</ul>
+
+<!--
+https://colab.research.google.com/notebooks/basic_features_overview.ipynb](https://colab.research.google.com/notebooks/basic_features_overview.ipynb">
+-->
+
+<ul>
+  <li><a target="_blank" href="https://colab.research.google.com/notebooks/welcome.ipynb?hl=ja"><code class="language-plaintext highlighter-rouge">Colab</code> のスタートページ</a></li>
+  <li><a target="_blank" href="https://youtu.be/Bgwujw-yom8">ユーチューバー Siraj さん, “クラウドを使ってニューラルネットワークを訓練する方法 “How to Train Your Models in the Cloud”</a></li>
+</ul>
+
+<!--
+- <a target="_blank" href="/colaboratory_faq/">Colab FAQ の日本語(拙)訳</a>
+-->
+
+<!--
+- [少し時間がかかりますが Keras によるニューラル画像変換を実行](https://colab.research.google.com/github/tensorflow/models/blob/master/research/nst_blogpost/4_Neural_Style_Transfer_with_Eager_Execution.ipynb)  してみることをお勧めします
+    - [https://research.google.com/seedbank/seeds](https://research.google.com/seedbank/seeds)
+-->
+<div class="footnotes">
+  <ol>
+    <li id="fn:stackoverflow">
+      <p><a href="https://stackoverflow.com">https://stackoverflow.com</a> とはプログラムに関する Q and A を投稿，知識共有のためのサイトです。 <a href="#fnref:stackoverflow" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:my_opinion01">
+      <p>筆者の主観です。ですがこの言質に対する反論は聞いたことが有りません。 <a href="#fnref:my_opinion01" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">jpa-bert.github.io</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">jpa-bert.github.io</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>for 2020jpa tutorial workshop</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
