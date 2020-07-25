@@ -22,7 +22,7 @@ title: "Welcome to JPA BERT"
 
 - [TensorFlow Playgournd ニューラルネットワークの基本](/tensorflow-playground)
 - [リカレントニューラルネットワークによる文字ベース言語モデル Javascript](https://komazawa-deep-learning.github.io/character_demo.html)
-- [効率良く t-SNE を使う方法](/misread-tsne/public/index.html)
+- [効率良く t-SNE を使う方法](https://project-ccap.github.io/misread-tsne/index.html)
 
 ### [2019年認知神経心理学研究会](https://www.cis.twcu.ac.jp/~asakawa/2019cnps_handson/) 資料より抜粋
 
