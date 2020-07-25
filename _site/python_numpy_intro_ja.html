@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Python, NumPyチュートリアル | jpa-bert.github.io</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Python, NumPyチュートリアル" />
+<meta name="author" content="Justin Johnson 著 (浅川伸一訳)\ 原典:<http://cs231n.github.io/python-numpy-tutorial/>" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="for 2020jpa tutorial workshop" />
+<meta property="og:description" content="for 2020jpa tutorial workshop" />
+<link rel="canonical" href="http://localhost:4000/python_numpy_intro_ja.html" />
+<meta property="og:url" content="http://localhost:4000/python_numpy_intro_ja.html" />
+<meta property="og:site_name" content="jpa-bert.github.io" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-01T00:00:00+09:00" />
+<script type="application/ld+json">
+{"headline":"Python, NumPyチュートリアル","url":"http://localhost:4000/python_numpy_intro_ja.html","dateModified":"2020-10-01T00:00:00+09:00","datePublished":"2020-10-01T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/python_numpy_intro_ja.html"},"author":{"@type":"Person","name":"Justin Johnson 著 (浅川伸一訳)\\ 原典:<http://cs231n.github.io/python-numpy-tutorial/>"},"description":"for 2020jpa tutorial workshop","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="jpa-bert.github.io" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">jpa-bert.github.io</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Welcome to JPA BERT</a><a class="page-link" href="/python_numpy_intro_ja.html">Python, NumPyチュートリアル</a><a class="page-link" href="/supp01_colab.html">Colab についての蘊蓄</a><a class="page-link" href="/supp02_colab_file_management.html">Colab 操作の基本</a><a class="page-link" href="/supp05_cnn.html">CNN についての蘊蓄</a><a class="page-link" href="/supp06_rnn.html">RNN リカレントニューラルネットワークについての蘊蓄</a><a class="page-link" href="/supp07_nlp.html">自然言語処理</a><a class="page-link" href="/notebooks/">notebook 置き場</a><a class="page-link" href="/playground/">Playground</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Python, NumPyチュートリアル</h1>
+  </header>
+
+  <div class="post-content">
+    <!--
+本チュートリアルはジャスティン・ジョンソンによって書かれた。
+
+本コースではPythonプログラミングを扱う。Pythonは万能プログラミング言語
+であり，NumPy, SciPy, Matplotlibなどの普及しているライブラリのおかげで
+科学技術計算に威力を発揮する。
+
+Python と NumPy のプログラミング経験があれば，本稿は Python を科学技術計算
+目的で使用する際の簡易入門コースとなるだろう。
+
+Matlab の経験があれば[**numpy for Matlab users**]
+<https://docs.scipy.org/doc/numpy-dev/user/numpy-for-matlab-users.html>
+を参照されたい。
+-->
+
+<!---   [Python](#python)-->
+<ul>
+  <li><a href="#python">Python</a>
+    <ul>
+      <li><a href="#python-basic">基本データ型</a></li>
+      <li><a href="#python-containers">コンテナ</a>
+        <ul>
+          <li><a href="#python-lists">リスト</a></li>
+          <li><a href="#python-dicts">辞書</a></li>
+          <li><a href="#python-sets">集合</a></li>
+          <li><a href="#python-tuples">タプル</a></li>
+        </ul>
+      </li>
+      <li><a href="#python-functions">関数</a></li>
+      <li><a href="#python-classes">クラス</a></li>
+    </ul>
+  </li>
+  <li><a href="#numpy">Numpy</a>
+    <ul>
+      <li><a href="#numpy-arrays">Arrays</a></li>
+      <li><a href="#numpy-array-indexing">Array indexing</a></li>
+      <li><a href="#numpy-datatypes">Datatypes</a></li>
+      <li><a href="#numpy-math">Array math</a></li>
+      <li><a href="#numpy-broadcasting">Broadcasting</a></li>
+    </ul>
+  </li>
+  <li><a href="#scipy">SciPy</a>
+    <ul>
+      <li><a href="#scipy-image">Image operations</a></li>
+      <li><a href="#scipy-matlab">MATLAB files</a></li>
+      <li><a href="#scipy-dist">Distance between points</a></li>
+    </ul>
+  </li>
+  <li><a href="#matplotlib">Matplotlib</a>
+    <ul>
+      <li><a href="#matplotlib-plotting">プロット</a></li>
+      <li><a href="#matplotlib-subplots">サブプロット</a></li>
+      <li><a href="#matplotlib-images">画像</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="python">Python</h2>
+
+<p>Python は高級言語であり動的マルチパラダイムのプログラミング言語である。
+Python のコードは強力なアイデアを数行で表現できる擬似言語に喩えられる。
+例えば古典的なクイックソートアルゴリズムは Python では以下のようになる:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quicksort</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">arr</span>
+    <span class="n">pivot</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arr</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">]</span>
+    <span class="n">middle</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arr</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">pivot</span><span class="p">]</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arr</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">quicksort</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">+</span> <span class="n">middle</span> <span class="o">+</span> <span class="n">quicksort</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">quicksort</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span> <span class="c1"># 印字( "[1, 1, 2, 3, 6, 8, 10]")
+</span></code></pre></div></div>
+
+<h2 id="python-のバージョン">Python のバージョン</h2>
+
+<p>現在 Python は 2 種類のバージョンがサポートされている。2.7 系 と 3 系 である。
+Python 3.0 以来，前方互換性が廃棄されて 2.7 系 と 3 系では互いに交換可能でない。
+本稿全コード 2.7 で動作する。</p>
+
+<p>Python のバージョンを調べるにはコマンドラインから <code class="language-plaintext highlighter-rouge">python –version</code> とするとチェックできる。</p>
+
+<h3 id="基本データ型">基本データ型</h3>
+
+<p>他の多くの言語と同じくPythonには<code class="language-plaintext highlighter-rouge">整数型</code>, <code class="language-plaintext highlighter-rouge">浮動小数点型</code>,
+<code class="language-plaintext highlighter-rouge">ブール(真偽)型</code>, <code class="language-plaintext highlighter-rouge">文字列型</code>という基本データ型がある。
+これらのデータ型は他のプログラミング言語と類似している。</p>
+
+<h4 id="数値">数値</h4>
+<p>整数型と浮動小数点型は他言語と同様に動作する。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1"># 印字 "&lt;type 'int'&gt;"
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>       <span class="c1"># 印字"3"
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># 加算; 印字 "4"
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># 減算; 印字 "2"
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># 乗算; 印字 "6"
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 指数; 印字 "9"
+</span><span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>       <span class="c1"># 印字 "4"
+</span><span class="n">x</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>       <span class="c1"># 印字 "8"
+</span><span class="n">y</span> <span class="o">=</span> <span class="mf">2.5</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="c1"># 印字 "&lt;type 'float'&gt;"
+</span><span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># 印字 "2.5 3.5 5.0 6.25"
+</span></code></pre></div></div>
+
+<p>他言語と異なりPythonには増分<code class="language-plaintext highlighter-rouge">x++</code>，減分<code class="language-plaintext highlighter-rouge">x–</code>を行う単項演算子は ない。</p>
+
+<p>Pythonには倍精度整数，複素数型も標準実装されている。詳細は
+<a href="https://docs.python.org/2/library/stdtypes.html#numeric-types-int-float-long-complex">https://docs.python.org/2/library/stdtypes.html#numeric-types-int-float-long-complex</a> に掲載されている。</p>
+
+<p>ブール型(真偽型):  Pythonは2値論理演算用の記号([<code class="language-plaintext highlighter-rouge">&amp;&amp;</code>]
+    [<code class="language-plaintext highlighter-rouge">||</code>], など)が用意されている。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">t</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">f</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="c1"># 印字 "&lt;type 'bool'&gt;"
+</span><span class="k">print</span><span class="p">(</span><span class="n">t</span> <span class="ow">and</span> <span class="n">f</span><span class="p">)</span> <span class="c1"># 論理積 AND; 印字 "False"
+</span><span class="k">print</span><span class="p">(</span><span class="n">t</span> <span class="ow">or</span> <span class="n">f</span><span class="p">)</span>  <span class="c1"># 論理和 OR; 印字 "True"
+</span><span class="k">print</span><span class="p">(</span><span class="ow">not</span> <span class="n">t</span><span class="p">)</span>   <span class="c1"># 論理否定 NOT; 印字 "False"
+</span><span class="k">print</span><span class="p">(</span><span class="n">t</span> <span class="o">!=</span> <span class="n">f</span><span class="p">)</span>  <span class="c1"># 排他的論理和 XOR; 印字 "True" 
+</span></code></pre></div></div>
+
+<h4 id="文字列">文字列</h4>
+<p>Pythonは文字列の扱いに優れる</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hello</span> <span class="o">=</span> <span class="s">'hello'</span>              <span class="c1"># 文字列リテラルはシングルクォート
+</span><span class="n">world</span> <span class="o">=</span> <span class="s">"world"</span>              <span class="c1"># あるいはダブルクォート。両方可能
+</span><span class="k">print</span><span class="p">(</span><span class="n">hello</span><span class="p">)</span>                 <span class="c1"># 印字 "hello"
+</span><span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hello</span><span class="p">))</span>            <span class="c1"># 文字列長の印字; 印字 "5"
+</span><span class="n">hw</span> <span class="o">=</span> <span class="n">hello</span> <span class="o">+</span> <span class="s">' '</span> <span class="o">+</span> <span class="n">world</span>     <span class="c1"># 文字列連結
+</span><span class="k">print</span><span class="p">(</span><span class="n">hw</span><span class="p">)</span>                    <span class="c1"># 印字 "hello world"
+</span><span class="n">hw12</span> <span class="o">=</span> <span class="s">'%s %s %d'</span> <span class="o">%</span> <span class="p">(</span><span class="n">hello</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>  <span class="c1"># sprintf 形式のフォーマット
+</span><span class="k">print</span><span class="p">(</span><span class="n">hw12</span><span class="p">)</span>                  <span class="c1"># 印字 "hello world 12"
+</span></code></pre></div></div>
+
+<p>文字列オブジェクトは有益なメソッド群である。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span> <span class="o">=</span> <span class="s">"hello"</span>
+<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">capitalize</span><span class="p">())</span>      <span class="c1"># 文字列の語頭の大文字化; 印字 "Hello"
+</span><span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">upper</span><span class="p">())</span>           <span class="c1"># 文字列の大文字化; 印字 "HELLO"
+</span><span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>          <span class="c1"># 文字列の右寄せ, 空白で埋まる; 印字 "  hello"
+</span><span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">center</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>         <span class="c1"># 文字列のセンタリング，空白で埋める; 印字 " hello "
+</span><span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'l'</span><span class="p">,</span> <span class="s">'(ell)'</span><span class="p">))</span>  <span class="c1"># 部分文字列の置換; 印字 "he(ell)(ell)o"
+</span><span class="k">print</span><span class="p">(</span><span class="s">'  world '</span><span class="p">.</span><span class="n">strip</span><span class="p">())</span>  <span class="c1"># 空白の除去; 印字 "world"
+</span></code></pre></div></div>
+
+<p>全文字列メソッドは <a href="https://docs.python.org/2/library/stdtypes.html#string-methods">https://docs.python.org/2/library/stdtypes.html#string-methods</a> に記載されている。</p>
+
+<h3 id="コンテナ">コンテナ</h3>
+
+<p>Python にはリスト，辞書，集合，タプルというコンテナが標準実装されている。</p>
+
+<h4 id="リスト">リスト</h4>
+
+<p>リストは配列のPython実装であるが，サイズ可変，かつ，異なる要素を持つことが
+できる。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>      <span class="c1"># リストの作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">xs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>    <span class="c1"># 印字 "[3, 1, 2] 2"
+</span><span class="k">print</span><span class="p">(</span><span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>       <span class="c1"># 負の指定子はリスト末端からの計数; 印字 "2"
+</span><span class="n">xs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">'foo'</span>       <span class="c1"># リストには異なる要素を含むことができる
+</span><span class="k">print</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>           <span class="c1"># 印字 "[3, 1, 'foo']"
+</span><span class="n">xs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">'bar'</span><span class="p">)</span>    <span class="c1"># リスト末に新要素を追加
+</span><span class="k">print</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>           <span class="c1"># 印字
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span>        <span class="c1"># リストの最終要素取り除きその値を返す
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span>        <span class="c1"># 印字 "bar [3, 1, 'foo']"
+</span></code></pre></div></div>
+
+<p>上と同様に血みどろの全リストの詳細が <a href="https://docs.python.org/2/tutorial/datastructures.html#more-on-lists">https://docs.python.org/2/tutorial/datastructures.html#more-on-lists</a> に記載されている。</p>
+
+<h4 id="スライス">スライス:</h4>
+
+<p>Python には一旦リストにアクセスすれば，その下位リストへ簡便にアクセスする記法がある。これをスライスと呼ぶ。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nums</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> <span class="c1"># range は組み込み関数で整数からなるリストを生成する
+</span><span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>           <span class="c1"># 印字 "[0, 1, 2, 3, 4]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>      <span class="c1"># 2番目の要素から4番目未満のスライス; 印字 "[2, 3]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>       <span class="c1"># 2番目から最後までのスライス; 印字 "[2, 3, 4]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>       <span class="c1"># 先頭要素から指定子2までの要素をスライス; 印字 "[0, 1]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">[:])</span>        <span class="c1"># リスト全体のスライスを得る; 印字 "[0, 1, 2, 3, 4]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>      <span class="c1"># スライス指定子には負値もとることができる; 印字 "[0, 1, 2, 3]"
+</span><span class="n">nums</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>    <span class="c1"># スライスして新しい値を割り当てる
+</span><span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>           <span class="c1"># 印字 "[0, 1, 8, 8, 4]"
+</span></code></pre></div></div>
+
+<p>NumPyの配列の項においてスライシングについて再び触れることとする。</p>
+
+<h4 id="ループ">ループ:</h4>
+
+<p>以下のようにリストの要素を繰り返すことができる。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span> <span class="o">=</span> <span class="p">[</span><span class="s">'cat'</span><span class="p">,</span> <span class="s">'dog'</span><span class="p">,</span> <span class="s">'monkey'</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">animal</span> <span class="ow">in</span> <span class="n">animals</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">animal</span><span class="p">)</span>
+    <span class="c1"># 各行に印字 "cat", "dog", "monkey"
+</span></code></pre></div></div>
+
+<p>あるループ内で各要素のインデックスを参照したければ，繰り返し内部で組み込み
+関数[<code class="language-plaintext highlighter-rouge">enumerate</code>]を使えば良い。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span> <span class="o">=</span> <span class="p">[</span><span class="s">'cat'</span><span class="p">,</span> <span class="s">'dog'</span><span class="p">,</span> <span class="s">'monkey'</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">animal</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">animals</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'#%d: %s'</span> <span class="o">%</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">animal</span><span class="p">))</span>
+    <span class="c1"># 印字行毎に "#1: cat", "#2: dog", "#3: monkey"
+</span></code></pre></div></div>
+
+<h4 id="リスト内包表記">リスト内包表記:</h4>
+<p>プログラミングにおいてはある型のデータを別の型へ変換した
+い場合が多い。自乗を計算するコードを以下に示す:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">squares</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+    <span class="n">squares</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">squares</span><span class="p">)</span>   <span class="c1"># 印字 [0, 1, 4, 9, 16]
+</span></code></pre></div></div>
+
+<p><strong>リスト内包表記</strong> を使えばより簡単なコードが書ける:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">squares</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">squares</span><span class="p">)</span>   <span class="c1"># 印字 [0, 1, 4, 9, 16]
+</span></code></pre></div></div>
+
+<h4 id="辞書">辞書:</h4>
+
+<p>Java の Map や Javascript のオブジェクトと同様，辞書とは，キー値とペア値を 集めたものである。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cat'</span><span class="p">:</span> <span class="s">'cute'</span><span class="p">,</span> <span class="s">'dog'</span><span class="p">:</span> <span class="s">'furry'</span><span class="p">}</span>  <span class="c1"># データから辞書を作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">'cat'</span><span class="p">])</span>           <span class="c1"># 辞書の項目から内容を表示; 印字 "cute"
+</span><span class="k">print</span><span class="p">(</span><span class="s">'cat'</span> <span class="ow">in</span> <span class="n">d</span><span class="p">)</span>         <span class="c1"># 辞書内を検索しキーの存在を返す; 印字 "True"
+</span><span class="n">d</span><span class="p">[</span><span class="s">'fish'</span><span class="p">]</span> <span class="o">=</span> <span class="s">'wet'</span>         <span class="c1"># 新項目を追加
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">'fish'</span><span class="p">])</span>          <span class="c1"># 印字 "wet"
+# print(d['monkey'])      # 辞書 d からキー'monkey'を検索。存在しないとキーエラー
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'monkey'</span><span class="p">,</span> <span class="s">'N/A'</span><span class="p">))</span>  <span class="c1"># 辞書の検索デフォルト値付き; 印字 "N/A"
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'fish'</span><span class="p">,</span> <span class="s">'N/A'</span><span class="p">))</span>    <span class="c1"># 辞書の検索デフォルト値付き; 印字 "wet"
+</span><span class="k">del</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">'fish'</span><span class="p">])</span>                 <span class="c1"># 辞書内の項目を削除
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'fish'</span><span class="p">,</span> <span class="s">'N/A'</span><span class="p">))</span>    <span class="c1"># "fish" は辞書にないので "N/A"
+</span></code></pre></div></div>
+
+<p>辞書についてもウェブ上に文書が掲載されている。</p>
+
+<h4 id="ループ-1">ループ:</h4>
+<p>辞書のキーを繰り返す簡便法がループである:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">'person'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'cat'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s">'spider'</span><span class="p">:</span> <span class="mi">8</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">animal</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+    <span class="n">legs</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">animal</span><span class="p">]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'A %s has %d legs'</span> <span class="o">%</span> <span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="n">legs</span><span class="p">))</span>
+    <span class="c1"># 印字 "A person has 2 legs", "A spider has 8 legs", "A cat has 4 legs"
+</span></code></pre></div></div>
+
+<p>辞書の各項目に対応する値を取り出すには <code class="language-plaintext highlighter-rouge">iteritems</code> メソッドを用いる:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">'person'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'cat'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s">'spider'</span><span class="p">:</span> <span class="mi">8</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">animal</span><span class="p">,</span> <span class="n">legs</span> <span class="ow">in</span> <span class="n">d</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'A %s has %d legs'</span> <span class="o">%</span> <span class="p">(</span><span class="n">animal</span><span class="p">,</span> <span class="n">legs</span><span class="p">))</span>
+    <span class="c1"># 印字 "A person has 2 legs", "A spider has 8 legs", "A cat has 4 legs"
+</span></code></pre></div></div>
+
+<h4 id="辞書内包表記">辞書内包表記:</h4>
+
+<p>リスト内包表記と同様，辞書内包表記にも簡便な方法が存在する。以下の例のとおり:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">even_num_to_square</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">}</span>
+<span class="k">print</span><span class="p">(</span><span class="n">even_num_to_square</span><span class="p">)</span>  <span class="c1"># 印字 "{0: 0, 2: 4, 4: 16}"
+</span></code></pre></div></div>
+
+<h4 id="集合">集合:</h4>
+
+<p>集合とは異なる要素を持つ順番を持たないデータの集まりである。以下の例を参照:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cat'</span><span class="p">,</span> <span class="s">'dog'</span><span class="p">}</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'cat'</span> <span class="ow">in</span> <span class="n">animals</span><span class="p">)</span>   <span class="c1"># 集合内の要素の存在の有無のチェック; 印字 "True"
+</span><span class="k">print</span><span class="p">(</span><span class="s">'fish'</span> <span class="ow">in</span> <span class="n">animals</span><span class="p">)</span>  <span class="c1"># 印字 "False"
+</span><span class="n">animals</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">'fish'</span><span class="p">)</span>       <span class="c1"># 集合に要素を追加
+</span><span class="k">print</span><span class="p">(</span><span class="s">'fish'</span> <span class="ow">in</span> <span class="n">animals</span><span class="p">)</span>  <span class="c1"># 印字 "True"
+</span><span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">animals</span><span class="p">))</span>       <span class="c1"># 集合の要素数を返す; 印字 "3"
+</span><span class="n">animals</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">'cat'</span><span class="p">)</span>        <span class="c1"># 集合に既存の要素を加えても何も起きない
+</span><span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">animals</span><span class="p">))</span>       <span class="c1"># 印字 "3"
+</span><span class="n">animals</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s">'cat'</span><span class="p">)</span>     <span class="c1"># 集合から要素を削除
+</span><span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">animals</span><span class="p">))</span>       <span class="c1"># 印字 "2"
+</span></code></pre></div></div>
+
+<p>今までと同じく，集合の全てについて記述した文書が上梓されている。</p>
+
+<h4 id="繰り返し">繰り返し:</h4>
+
+<p>集合における繰り返しもリストに対する繰り返しと同じ記法である。
+しかし集合には順序がないので，集合内の各要素について順番を仮定してはならない:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">animals</span> <span class="o">=</span> <span class="p">{</span><span class="s">'cat'</span><span class="p">,</span> <span class="s">'dog'</span><span class="p">,</span> <span class="s">'fish'</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">animal</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">animals</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'#%d: %s'</span> <span class="o">%</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">animal</span><span class="p">))</span>
+    <span class="c1"># 印字 "#1: fish", "#2: dog", "#3: cat"
+</span></code></pre></div></div>
+
+<h4 id="集合内包表記">集合内包表記:</h4>
+
+<p>リストや辞書と同様，集合内包にも簡易記法が存在する:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span class="n">nums</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">)}</span>
+<span class="k">print</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>  <span class="c1"># 印字 "set([0, 1, 2, 3, 4, 5])"
+</span></code></pre></div></div>
+
+<h4 id="タプル">タプル:</h4>
+
+<p>タプルとは値の順序の変更が不能な順序付きリストである。タプルはリストに類似
+しているが，辞書のキーとして集合を要素として持つことが可能である。リストに
+はこの特徴は無い。簡単な例を示す:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="p">{(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)}</span> <span class="c1"># タプルキーを持つ辞書の生成
+</span><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>        <span class="c1"># タプルの生成
+</span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>    <span class="c1"># 印字 "&lt;type 'tuple'&gt;"
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>       <span class="c1"># 印字 "5"
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])</span>  <span class="c1"># 印字 "1"
+</span></code></pre></div></div>
+
+<p><a href="https://docs.python.org/2/tutorial/datastructures.html#tuples-and-sequences">https://docs.python.org/2/tutorial/datastructures.html#tuples-and-sequences</a>
+には更に詳しい情報が記載されている。</p>
+
+<h3 id="関数">関数</h3>
+
+<p>Python の関数はキーワード <code class="language-plaintext highlighter-rouge">def</code> を用いて定義される。以下の例:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'positive'</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'negative'</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'zero'</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">sign</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="c1"># 印字 "negative", "zero", "positive"
+</span></code></pre></div></div>
+
+<p>関数は以下のようにオプションキーワード付きで定義可能である:</p>
+
+<pre><code class="language-ptyhon">def hello(name, loud=False):
+    if loud:
+        print('HELLO, %s' % name.upper())
+    else:
+        print( 'Hello, %s!' % name)
+
+hello('Bob')              # 印字 "Hello, Bob"
+hello('Fred', loud=True)  # 印字 "HELLO, FRED!"
+</code></pre>
+
+<p>Python のクラス情報は <a href="https://docs.python.org/2/tutorial/controlflow.html#defining-functions">https://docs.python.org/2/tutorial/controlflow.html#defining-functions</a>を参照のこと</p>
+
+<h3 id="クラス">クラス</h3>
+
+<p>Pythonにおけるクラス定義の記法は直截的である。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Greeter</span><span class="p">:</span>
+
+    <span class="c1"># Constructor
+</span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># インスタンスの生成
+</span>
+    <span class="c1"># Instance method
+</span>    <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loud</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">loud</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'HELLO, %s!'</span> <span class="o">%</span> <span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">upper</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Hello, %s'</span> <span class="o">%</span> <span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">Greeter</span><span class="p">(</span><span class="s">'Fred'</span><span class="p">)</span>  <span class="c1"># Greeter クラスのインスタンスを生成
+</span><span class="n">g</span><span class="p">.</span><span class="n">greet</span><span class="p">()</span>            <span class="c1"># インスタンスメソッドの呼び出し; 印字 "Hello, Fred"
+</span><span class="n">g</span><span class="p">.</span><span class="n">greet</span><span class="p">(</span><span class="n">loud</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>   <span class="c1"># インスタンスメソッドの呼び出し; 印字 "HELLO, FRED!"
+</span></code></pre></div></div>
+
+<p>クラスについての詳細は以下である
+<a href="https://docs.python.org/2/tutorial/classes.html">https://docs.python.org/2/tutorial/classes.html</a></p>
+
+<h2 id="numpy">NumPy</h2>
+
+<p>NumPyはPythonにおける科学技術計算の核となるライブラリである。高性能多次元配列オブジェクトと配列処理用ツールから構成されている。MATLAB
+が既知ならば，本チュートリアルからNumPyを始めるのが良いだろう。</p>
+
+<h3 id="配列">配列</h3>
+
+<p>NumPyの配列は値の格子状配置である。全要素の値は同じデータ型であり，非負整数のタプルで指定可能である。</p>
+
+<p>Pythonにおける配列は入れ子になったリストであり，カギカッコを用いる。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>           <span class="c1"># 次元数 1 の配列の作成
+</span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>                     <span class="c1"># 印字 "&lt;type 'numpy.ndarray'&gt;"
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>                    <span class="c1"># 印字 "(3,)"
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>           <span class="c1"># 印字 "1 2 3"
+</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>                          <span class="c1"># 配列の要素を一つ変更
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>                          <span class="c1"># 印字 "[5, 2, 3]"
+</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span>   <span class="c1"># 次元数が 2 の配列の作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>                     <span class="c1"># 印字 "(2, 3)"
+</span><span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>   <span class="c1"># 印字 "1 2 4"
+</span></code></pre></div></div>
+
+<p>NumPy には配列を生成する関数が用意されている:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>   <span class="c1"># 全要素がゼロの配列の作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>              <span class="c1"># 印字 "[[ 0.  0.]
+</span>                      <span class="c1">#        [ 0.  0.]]"
+</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>    <span class="c1"># 全要素がゼロの配列の作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>              <span class="c1"># 印字 "[[ 1.  1.]]"
+</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">full</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="mi">7</span><span class="p">)</span> <span class="c1"># 定数行列を作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>              <span class="c1"># 印字 "[[ 7.  7.]
+</span>                      <span class="c1">#        [ 7.  7.]]"
+</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>         <span class="c1"># 2x2 の単位行列の作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>              <span class="c1"># 印字 "[[ 1.  0.]
+</span>                      <span class="c1">#        [ 0.  1.]]"
+</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># 乱数で初期化した配列の作成
+</span><span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>                    <span class="c1"># 印字例 "[[ 0.91940167  0.08143941]
+</span>                            <span class="c1">#          [ 0.68744134  0.87236687]]"
+</span></code></pre></div></div>
+
+<p>配列を作成する他の方法は<a href="http://docs.scipy.org/doc/numpy/user/basics.creation.html#arrays-creation">http://docs.scipy.org/doc/numpy/user/basics.creation.html#arrays-creation</a>で読むことができる。</p>
+
+<h3 id="配列指定">配列指定</h3>
+
+<p>NumPy には指定子を配列化する方法が複数存在する。</p>
+
+<h3 id="スライス-1">スライス:</h3>
+
+<p>Pythonにおけるリストと同様，NumPyの配列にはスライス
+が適用可能である。配列の各次元毎にスライスを指定可能である。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import numpy as np
+
+# 3行4列で階数が2の行列の作成
+# [[ 1  2  3  4]
+#  [ 5  6  7  8]
+#  [ 9 10 11 12]]
+a = np.array([[1,2,3,4], [5,6,7,8], [9,10,11,12]])
+
+# 下位行列のスライスし，上2行の1列目2列目を用いて2行2列の行列を作成
+# [[2 3]
+#  [6 7]]
+b = a[:2, 1:3]
+
+# スライスは元行列への参照なので，スライスへの変更は元データに影響を及ぼす
+print(a[0,1])   # 印字 "2"
+b[0, 0] = 77    # b[0, 0] は a[0, 1] と等価
+print(a[0,1])   # 印字 "77"
+</code></pre></div></div>
+
+<p>整数指定子とスライス指定子を混在させることができる。
+しかし，そうすると元行列よりも次元の低い行列を作成することになる。
+MATLAB における行列スライスとは異なることに注意せよ。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># 3行4列の2次の行列を作成
+# [[ 1  2  3  5]
+#  [ 4  6  7  8]
+#  [ 9 10 11 12]]
+</span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">]])</span>
+
+<span class="c1"># 行列の中央行へのアクセス2種類
+# スライスと整数の混在は階数の低下をもたらす
+# 一方，スライスのみを使用した場合には原行列の次元低減は発生しない
+</span><span class="n">row_r1</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>    <span class="c1"># 行列 a の 2 行目の全列表示
+</span><span class="n">row_r2</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># 行列 a の 2 行目の全列表示
+</span><span class="k">print</span><span class="p">(</span><span class="n">row_r1</span><span class="p">,</span> <span class="n">row_r1</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># 印字 "[5 6 7 8] (4,)"
+</span><span class="k">print</span><span class="p">(</span><span class="n">row_r2</span><span class="p">,</span> <span class="n">row_r2</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># 印字 "[[5 6 7 8]] (1, 4)"
+</span>
+<span class="c1"># 行列に対する列への操作も同様
+</span><span class="n">col_r1</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">col_r2</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">col_r1</span><span class="p">,</span> <span class="n">col_r1</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># 印字 "[ 2  6 10] (3,)"
+</span><span class="k">print</span><span class="p">(</span><span class="n">col_r2</span><span class="p">,</span> <span class="n">col_r2</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># 印字 "[[ 2]
+</span>                             <span class="c1">#        [ 6]
+</span>                             <span class="c1">#        [10]] (3, 1)"
+</span></code></pre></div></div>
+
+<h4 id="整数型配列指定子">整数型配列指定子:</h4>
+<p>NumPyの配列に対してスライスを実行すると，結果は元行列の下位配列となる。
+これに対して，整数型変数からなる配列に対してスライスを実行すれば，
+新たな配列が構成される。以下のとおり:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
+
+<span class="c1"># 整数型配列の例 戻り値の配列の shape は (3,)
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># 印字 "[1 4 5]"
+</span>
+<span class="c1"># 上例は整数型配列を指定子とした場合と等しい:
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]))</span>  <span class="c1"># 印字 "[1 4 5]"
+</span>
+<span class="c1"># 整数型配列を指定子として用いると元配列と同じ要素を再利用できる
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>  <span class="c1"># 印字 "[2 2]"
+</span>
+<span class="c1"># 先の整数型の配列指定子に等しい
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]))</span> <span class="c1"># 印字 "[2 2]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]))</span>  <span class="c1"># 印字 "[2 2]"
+</span></code></pre></div></div>
+
+<h4 id="ブーリアン配列指定子">ブーリアン配列指定子:</h4>
+<p>ール(2値)型配列指定子は配列の任意の要素を取り
+出すことが可能である。この指定子により配列から任意の条件を満たす要素からな
+る配列を作成することが可能である。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
+<span class="n">bool_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 2　より大きい配列の要素を探す
+</span>                    <span class="c1"># これにより numpy の配列と等しい shape でブール型の
+</span>                    <span class="c1"># 配列を返す。bool_idx は a の各要素が 2 より大きい
+</span>                    <span class="c1"># か否かを示す
+</span><span class="k">print</span><span class="p">(</span><span class="n">bool_idx</span><span class="p">)</span>     <span class="c1"># 印字 "[[False False]
+</span>                    <span class="c1">#        [ True  True]
+</span>                    <span class="c1">#        [ True  True]]"
+</span>
+<span class="c1"># ブール型配列指定子を用いて階数1の行列を作ることができる
+# bool_idx の True に対応する要素で構成される行列である
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">bool_idx</span><span class="p">])</span>  <span class="c1"># 印字 "[3 4 5 6]"
+</span>
+<span class="c1"># 上例を簡潔に表記可能である
+</span><span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">])</span>     <span class="c1"># 印字 "[3 4 5 6]"
+</span></code></pre></div></div>
+
+<p>本稿の簡潔性ゆえNumPyの配列指定子の詳細については多くを記載していない。
+詳細は文献を参照のこと。</p>
+
+<h3 id="データ型">データ型</h3>
+
+<p>NumPy の配列は同じ型の要素からなるグリッドである。
+配列作成には一連のデータ型を利用可能である。
+NumPyは配列のデータ型が何であるかを類推しようとする。
+以下のようにオプション引数により明示的に配列のデータ型を指定することも可能である:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>        <span class="c1"># numpy にデータ型を選択させる
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">dtype</span><span class="p">)</span>             <span class="c1"># 印字 "int64"
+</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>   <span class="c1"># numpy にデータ型を選択させる
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">dtype</span><span class="p">)</span>             <span class="c1"># 印字 "float64"
+</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">int64</span><span class="p">)</span>  <span class="c1"># データ型の強制指定
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">dtype</span><span class="p">)</span>             <span class="c1"># 印字 "int64"
+</span></code></pre></div></div>
+
+<p>NumPy の全データ型については<a href="http://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html">http://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html</a>を参照のこと。</p>
+
+<h3 id="数学的配列">数学的配列</h3>
+
+<p>基本的数学関数の操作は配列の要素毎の演算である。
+NumPy モジュールの関数として演算子を上書き可能である．</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="c1"># 対応する要素の和，両例とも同じ結果を得る
+# [[ 6.0  8.0]
+#  [10.0 12.0]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="c1"># 対応する要素の差，両例とも同じ結果を得る
+# [[-4.0 -4.0]
+#  [-4.0 -4.0]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="c1"># 対応する要素の積，両例とも同じ結果を得る
+# [[ 5.0 12.0]
+#  [21.0 32.0]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="c1"># 対応する要素の徐，両例とも同じ結果を得る
+# [[ 0.2         0.33333333]
+#  [ 0.42857143  0.5       ]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">divide</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+<span class="c1"># 各要素の平方根
+# [[ 1.          1.41421356]
+#  [ 1.73205081  2.        ]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>MATLAB と異なり，[<code class="language-plaintext highlighter-rouge">*</code>]
+は要素毎の積であり，行列の積ではない。
+ベクトルの内積，ベクトルと行列の積，行列の積には[<code class="language-plaintext highlighter-rouge">dot</code>]を用いる。
+[<code class="language-plaintext highlighter-rouge">dot</code>]は NumPy モジュールと配列オブジェクトのメソッドインスタンスに
+適用可能である。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]])</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+
+<span class="c1"># ベクトルの内積両者とも同じく 219 を得る
+</span><span class="k">print</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+
+<span class="c1"># 行列とベクトルの積。両者とも同じく [29 67] を得る
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+<span class="c1"># 行列と行列の積。両者とも同じく以下の行列を得る
+# [[19 22]
+#  [43 50]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>NumPy は行列操作遂行に有役な関数を数多く提供している。[<code class="language-plaintext highlighter-rouge">sum</code>]
+など</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>          <span class="c1"># 総和を計算 10と印字
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># 各列の総和を計算: "[4 6]" と印字
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># 各行の総和を計算: "[3 7]" と印字
+</span></code></pre></div></div>
+
+<p>NumPyの全数学関数リストは
+<a href="http://docs.scipy.org/doc/numpy/reference/routines.math.html">http://docs.scipy.org/doc/numpy/reference/routines.math.html</a>から入手可
+能である。</p>
+
+<p>配列を用いた数学関数の計算だけでなく，配列の reshae
+や他のデータ操作が多数必
+要となる。単純な例は行列の転置である。行列の転置には配列オブジェクトの
+[<code class="language-plaintext highlighter-rouge">T</code>] を使えばよい。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>    <span class="c1"># 印字 "[[1 2]
+</span>            <span class="c1">#        [3 4]]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># 印字 "[[1 3]
+</span>            <span class="c1">#        [2 4]]"
+</span>
+<span class="c1"># 階数1の行列を転置してもなにも変わらないことに注意
+</span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>    <span class="c1"># 印字 "[1 2 3]"
+</span><span class="k">print</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># 印字 "[1 2 3]"
+</span></code></pre></div></div>
+
+<p>NumPy は配列操作関数が多い。<a href="http://docs.scipy.org/doc/numpy/reference/routines.array-manipulation.html">http://docs.scipy.org/doc/numpy/reference/routines.array-manipulation.html</a>を参照されたい。</p>
+
+<h3 id="ブロードキャスト">ブロードキャスト</h3>
+
+<p>ブロードキャストは算術的操作を行う際、NumPyが異なる shape
+の配列に強力な処 理機構を行うことを可能にする。</p>
+
+<p>行列の各行に対して定数ベクトルを加える場合を以下に示す:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># 行列 x の各行に対してベクトル v を加え結果を y に格納
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]])</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>   <span class="c1"># x と同じ shape を持つ空行列を生成
+</span>
+<span class="c1"># 明示的繰り返しを用いて行列 x の各行にベクトル v の要素を加算
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">v</span>
+
+<span class="c1"># y は以下のようになる
+# [[ 2  2  4]
+#  [ 5  5  7]
+#  [ 8  8 10]
+#  [11 11 13]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>行列 <code class="language-plaintext highlighter-rouge">x</code> が巨大な場合Pythonの明示的なループは遅い。行列<code class="language-plaintext highlighter-rouge">x</code>の各行
+にベクトル <code class="language-plaintext highlighter-rouge">v</code> を加えることはスタック領域に積まれた<code class="language-plaintext highlighter-rouge">v</code>のコピーと行
+列 <code class="language-plaintext highlighter-rouge">vv</code> の和を構成することに等しい。以下の例のようになる。</p>
+
+<pre><code class="language-pthon">import numpy as np
+
+# 行列 x の各要素にベクトル v を加える
+# 行列 y に結果を格納
+x = np.array([[1,2,3], [4,5,6], [7,8,9], [10, 11, 12]])
+v = np.array([1, 0, 1])
+vv = np.tile(v, (4, 1))  # v から4つのスタックを作成
+print(vv)                # 印字 "[[1 0 1]
+                         #        [1 0 1]
+                         #        [1 0 1]
+                         #        [1 0 1]]"
+y = x + vv # x と vv の各要素を加える
+print(y)   # 印字 "[[ 2  2  4
+           #        [ 5  5  7]
+           #        [ 8  8 10]
+           #        [11 11 13]]"
+</code></pre>
+
+<p>NumPy のブロードキャストは<code class="language-plaintext highlighter-rouge">y</code>の多重コピーを作成することなく計算を
+実行する。ブロードキャストを用いたバージョンを以下に示す:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># 行列 x の各行にベクトル v を加える
+# 結果を行列 y に格納する
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]])</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">v</span>  <span class="c1"># ブロードキャストを使って x の各行に v を加える
+</span><span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>   <span class="c1"># 印字 "[[ 2  2  4]
+</span>           <span class="c1">#        [ 5  5  7]
+</span>           <span class="c1">#        [ 8  8 10]
+</span>           <span class="c1">#        [11 11 13]]"
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">y = x + v</code>の行は，<code class="language-plaintext highlighter-rouge">x</code>は<code class="language-plaintext highlighter-rouge">(4,3)</code>の次数を持ち，<code class="language-plaintext highlighter-rouge">v</code>は
+<code class="language-plaintext highlighter-rouge">(3,)</code>の次数を持つことがブロードキャストにより<code class="language-plaintext highlighter-rouge">y = x + v</code>が計算され
+る。もし<code class="language-plaintext highlighter-rouge">v</code>が次数<code class="language-plaintext highlighter-rouge">(4,3)</code>であるように作用する。各行は<code class="language-plaintext highlighter-rouge">v</code>の
+コピーであり各要素の和が計算される。</p>
+
+<p>2つの行列をブロードキャストする場合以下の規則に従う:</p>
+
+<ol>
+  <li>もし二つの行列が同じ次数でなければ低次数の行列を拡張して等しくする。</li>
+  <li>二つの行列が，特定の次元のみ一致している場合，片方の配列の次元が1であっても、他の次元も同じサイズの次元にする。</li>
+  <li>二つの配列全ての次元に互換性があれば両者ともブロードキャストされる。</li>
+  <li>ブロードキャスト後，各配列は両入力配列の次数が等しいとして振る舞う。</li>
+  <li>一方の配列のサイズが1であり他方の配列サイズが1より大きい場合，最初の
+配列は次元を繰り返し複写して動作する</li>
+</ol>
+
+<p>上記の意味が不明なら，
+<a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html</a> 
+の <a href="http://wiki.scipy.org/EricsBroadcastingDoc">http://wiki.scipy.org/EricsBroadcastingDoc</a> 説明を読まれたい。</p>
+
+<p>ブロードキャストをサポートする関数はユニバーサル関数として知られる。
+ユニバーサル関数のリストは <a href="http://docs.scipy.org/doc/numpy/reference/ufuncs.html#available-ufuncs">http://docs.scipy.org/doc/numpy/reference/ufuncs.html#available-ufuncs</a> を参照のこと。</p>
+
+<p>ブロードキャストの例を示す:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="c1"># ベクトルの外積を計算
+</span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># v の次数 (3,)
+</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>    <span class="c1"># w の次数 (2,)
+# 外積を計算するため v の次数を列へと変形する
+# 次数 (3, 1) のベクトル; w に対してブロードキャストする
+# 外積の計算結果である次数 (3, 2) の行列を得る
+# [[ 4  5]
+#  [ 8 10]
+#  [12 15]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span>
+
+<span class="c1"># 行列の各行にベクトルを加算する
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]])</span>
+<span class="c1"># x は次数 (2,3) であり v は (3,) である。v はブロードキャストされて (2,3) となり
+# x has shape (2, 3) and v has shape (3,) so they broadcast to (2, 3),
+# 以下の行列を得る:
+# [[2 4 6]
+#  [5 7 9]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+
+<span class="c1"># 行列の各列にベクトルを加える
+# x の次数は (2, 3) であり，w の次数は (2,) である。 x を転置すれば
+# 次数は (3, 2) となり w はブロードキャストされ次数は (3, 2) となる。
+# 結果は転置され次数 (2, 3) の行列となり以下の行列を得る:
+# [[ 5  6  7]
+#  [ 9 10 11]]
+</span><span class="k">print</span><span class="p">((</span><span class="n">x</span><span class="p">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">w</span><span class="p">).</span><span class="n">T</span><span class="p">)</span>
+<span class="c1"># 別解としては次数 (2, 1) の行ベクトルに対して次数を変換し，
+# その結果をブロードキャストして直接外積を計算する
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+
+<span class="c1"># 行列の定数倍:
+# 行列 x の次数は (2, 3). Numpy はスカラを次数 () の配列として扱う:
+# スカラはブロードキャストされ次数 (2, 3) の行列となり以下の結果を得る
+# [[ 2  4  6]
+#  [ 8 10 12]]
+</span><span class="k">print</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>ブロードキャストによりコードは簡潔になり，高速化する。
+可能な限りブロードキャストを使うよう努めるべきである。</p>
+
+<h3 id="numpy-の文書">NumPy の文書</h3>
+
+<p>ここでは NumPy に関して概説したが完全な記述には程遠い。NumPy 
+のリファレンス <a href="http://docs.scipy.org/doc/numpy/reference/">http://docs.scipy.org/doc/numpy/reference/</a> 
+には詳細が記されている。</p>
+
+<h2 id="scipy">SciPy</h2>
+
+<p>NumPy は高性能な多次元配列を提供し，配列操作の基本道具を提供している。
+SciPy は(<a href="http://docs.scipy.org/doc/scipy/reference/">http://docs.scipy.org/doc/scipy/reference/</a>)
+NumPy で定義された配列と科学技術に有益な関数数多く用意している。</p>
+
+<p>SciPy を理解するには<a href="http://docs.scipy.org/doc/scipy/reference/index.html">http://docs.scipy.org/doc/scipy/reference/index.html</a>
+を観ることである。ここではSciPy の有益点いくつかに焦点をあてる。</p>
+
+<h3 id="画像操作">画像操作</h3>
+
+<p>SciPy は画像操作の基本関数を提供する。
+例えば，ディスクから画像を読み込んで NumPy の配列に代入し，
+NumPy の配列を画像としてディスクに書き込み，
+画像のサイズを変更する関数などである。
+ここでは，これらの関数例を供覧する</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">imread</span><span class="p">,</span> <span class="n">imsave</span><span class="p">,</span> <span class="n">imresize</span>
+
+<span class="c1"># JPEG 画像を\NumPy 配列に読み込む
+</span><span class="n">img</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">'assets/cat.jpg'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">img</span><span class="p">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">img</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># 印字 "uint8 (400, 248, 3)"
+</span>
+<span class="c1"># 各色チャンネルを異なるスカラ定数により色合いを変える。
+# 画像は (400, 248, 3) の次数である。
+# 次数 (3,) の配列 [1, 0.95, 0.9] を掛ける;
+# numpy のブロードキャストは赤チャンネルは変更せず，
+# 緑と青とをそれぞれ 0.95 倍，0.9 倍する
+</span><span class="n">img_tinted</span> <span class="o">=</span> <span class="n">img</span> <span class="o">*</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+
+<span class="c1"># 色合いを変更した画像を縦横 300 画素の画像に変換する
+</span><span class="n">img_tinted</span> <span class="o">=</span> <span class="n">imresize</span><span class="p">(</span><span class="n">img_tinted</span><span class="p">,</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
+
+<span class="c1"># 変更した画像をディスクに書き出す
+</span>
+<span class="n">imsave</span><span class="p">(</span><span class="s">'assets/cat_tinted.jpg'</span><span class="p">,</span> <span class="n">img_tinted</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="distance-between-points">Distance between points</h3>
+
+<p>SciPy は点の集合間の距離を計算するための有益な関数が定義されている。</p>
+
+<p>[<code class="language-plaintext highlighter-rouge">scipy.spatial.distance.pdist</code>]
+関数は所与の集合に属する全点 間の距離を計算する:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">pdist</span><span class="p">,</span> <span class="n">squareform</span>
+
+<span class="c1"># 2次の行からなる以下の配列を定義する:
+# [[0 1]
+#  [1 0]
+#  [2 0]]
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># x の全ての行のユークリッド距離の計算
+# d[i, j] は x[i, :] と x[j, :] との距離であり以下の行列となる
+# [[ 0.          1.41421356  2.23606798]
+#  [ 1.41421356  0.          1.        ]
+#  [ 2.23606798  1.          0.        ]]
+</span><span class="n">d</span> <span class="o">=</span> <span class="n">squareform</span><span class="p">(</span><span class="n">pdist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s">'euclidean'</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>詳細は <a href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html">http://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html</a> に記されている。</p>
+
+<p>類似の関数 [<code class="language-plaintext highlighter-rouge">scipy.spatial.distance.cdist</code>] は 2 つの集合の 2 点間の全対の距
+離を計算する。<a href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cdist.html">http://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.cdist.html</a> を参照のこと。</p>
+
+<h2 id="matplotlib">Matplotlib</h2>
+
+<p>Matplotlib は描画ライブラリである。
+本節では Mycmdmatplotlib.pyplot モジュールを概説する。 MATLAB と同等のものである。</p>
+
+<h3 id="プロット">プロット</h3>
+
+<p>Matplotlib の最重要関数は[<code class="language-plaintext highlighter-rouge">plot</code>] である。2 次元の描画が可能である。以下に例を示す:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># x, y 座標に正弦波を描く
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># matplotlib の plot 関数で描画
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>  <span class="c1"># 画面に表示するために plt.show() を使う
+</span></code></pre></div></div>
+
+<p>上記のコードを実行することで以下の画像を得る。</p>
+
+<center>
+<img src="/assets/sin_curve.svg" style="width:66%" />
+</center>
+
+<p>さらに手を加えると複数の線，タイトル，凡例，軸ラベルを描画可能である:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># x, y 座標上に正弦波と余弦波の曲線をプロットする
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">y_sin</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y_cos</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># matplotlib の plot を用いる
+</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_sin</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_cos</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'x axis label'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'y axis label'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Sine and Cosine'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">([</span><span class="s">'Sine'</span><span class="p">,</span> <span class="s">'Cosine'</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<center>
+<img src="/assets/sin_cos_plot.svg" style="width:66%" />
+</center>
+
+<p>[<code class="language-plaintext highlighter-rouge">plot</code>]関数の詳細は<a href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot">http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot</a>から読むことができる。</p>
+
+<h3 id="サブプロット">サブプロット</h3>
+
+<p>[<code class="language-plaintext highlighter-rouge">subplot</code>]関数を用れば同一図に別のプロットを入れることが可能である。
+以下に例を示す:</p>
+
+<pre><code class="language-pyton">import numpy as np
+import matplotlib.pyplot as plt
+
+# x, y 座標上で正弦波と余弦波をプロット
+x = np.arange(0, 3 * np.pi, 0.1)
+y_sin = np.sin(x)
+y_cos = np.cos(x)
+
+# 高さ2、幅1のサブプロット用格子を設定
+# 最初のサブプロットをアクティブにする
+plt.subplot(2, 1, 1)
+
+# 最初のプロットを作成
+plt.plot(x, y_sin)
+plt.title('Sine')
+
+# 2番目のサブプロットをアクティブにし，プロットを作成
+plt.subplot(2, 1, 2)
+plt.plot(x, y_cos)
+plt.title('Cosine')
+
+# 図の画面表示
+plt.show()
+</code></pre>
+
+<center>
+<img src="assets/sin_cos_subplot.svg" style="width:66%" />
+</center>
+
+<p>[<code class="language-plaintext highlighter-rouge">subplot</code>] 関数の詳細は<a href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.subplot">http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.subplot</a>から読むことができる。</p>
+
+<h3 id="画像">画像</h3>
+
+<p>[<code class="language-plaintext highlighter-rouge">imshow</code>]関数を使て画像を表示することが可能である:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rom</span> <span class="n">skimage</span> <span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">img_file</span> <span class="o">=</span> <span class="s">'/Users/asakawa/Pictures/19960222_004.jpg'</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">imread</span><span class="p">(</span><span class="n">img_file</span><span class="p">)</span>
+<span class="n">img_tinted</span> <span class="o">=</span> <span class="n">img</span><span class="o">/</span><span class="mf">255.</span> <span class="o">*</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+
+<span class="c1"># 原画像の表示
+</span><span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+<span class="c1"># 色合いを変えた画像の表示
+</span><span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img_tinted</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_base</span><span class="p">,</span> <span class="s">'tinted_imshow.svg'</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<center>
+<img src="/assets/tinted_imshow.svg" style="width:49%" />
+</center>
+
+<!-- cs231n cs231n karpathy\@cs.stanford.edu -->
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">jpa-bert.github.io</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">jpa-bert.github.io</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>for 2020jpa tutorial workshop</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
