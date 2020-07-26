@@ -16,6 +16,45 @@
 {"url":"http://localhost:4000/notebooks/","headline":"colab ファイル置き場","description":"for 2020jpa tutorial workshop","@type":"WebPage","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="jpa-bert.github.io" /></head>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true,
+        tags: "ams",
+        autoload: {
+          color: [],
+          colorV2: ['color']
+        },
+        packages: {'[+]': ['noerrors']}
+      },
+      chtml: {
+        matchFontHeight: false,
+        displayAlign: "left",
+        displayIndent: "2em"
+      },
+      options: {
+        renderActions: {
+          /* add a new named action to render <script type="math/tex"> */
+          find_script_mathtex: [10, function (doc) {
+            for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            }
+          }, '']
+        }
+      },
+      loader: {
+        load: ['[tex]/noerrors']
+      }
+    };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script"></script>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">jpa-bert.github.io</a><nav class="site-nav">
@@ -33,21 +72,26 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <p><a href="https://github.com/pytorch/tutorials/tree/master/beginner_source/nlp">PyTorch で 自然言語処理を行う場合のチュートリアル</a> ファイルの翻訳 + colab file への変換</p>
+        <h3 id="ここに示すアイコン--は-colab-ファイルであることを意味しています">ここに示すアイコン <a href="https://colab.research.google.com/" target="_blank"><img src="/assets/colab_icon.svg" /></a> は colab ファイルであることを意味しています。</h3>
+<p>クリックすると colab が起動します。</p>
+
+<p><a href="https://github.com/pytorch/tutorials/tree/master/beginner_source/nlp">PyTorch で 自然言語処理を行う場合のチュートリアル</a> ファイルの翻訳 + colab file への変換</p>
 
 <ol>
-  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0723pytorch_tutorial.ipynb">PyTorch 入門 Introduction to PyTorch <img src="/assets/colab_icon.svg" /></a></li>
-  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722deep_learning_tutorial.ipynb">PyTorch による深層学習 Deep Learning with PyTorch <img src="/assets/colab_icon.svg" /></a></li>
-  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722word_embeddings_tutorial.ipynb">単語埋め込み:語彙的意味の符号化 Word Embeddings: Encoding Lexical Semantics <img src="/assets/colab_icon.svg" /></a></li>
-  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722sequence_models_tutorial.ipynb">系列モデルと LSTM Sequence Models and Long-Short Term Memory Networks <img src="/assets/colab_icon.svg" /></a></li>
-  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722advanced_tutorial.ipynb">動的意思決定と双方向 LSTM 条件付き確率場 Advanced: Making Dynamic Decisions and the Bi-LSTM CRF <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/01pytorch_tutorial.ipynb" target="_blank">PyTorch 入門 Introduction to PyTorch <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/02deep_learning_tutorial.ipynb" target="_blank">PyTorch による深層学習 Deep Learning with PyTorch <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/03word_embeddings_tutorial.ipynb" target="_blank">単語埋め込み:語彙的意味の符号化 Word Embeddings: Encoding Lexical Semantics <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/04sequence_models_tutorial.ipynb" target="_blank">系列モデルと LSTM Sequence Models and Long-Short Term Memory Networks <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/05advanced_tutorial.ipynb" target="_blank">動的意思決定と双方向 LSTM 条件付き確率場 Advanced: Making Dynamic Decisions and the Bi-LSTM CRF <img src="/assets/colab_icon.svg" /></a></li>
 </ol>
 
 <hr />
 <p><br /></p>
 
 <ol>
-  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722Annotated_Attention_is_All_You_Need.ipynb">トランスフォーマー解説 <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/ShinAsakawa/2019cnps/blob/master/notebooks/2019cnps_word2vec.ipynb" target="_blank">word2vec によるアナロジー <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0726torch_word_language_model.ipynb" target="_blank">トランスフォーマーによる言語モデル <img src="/assets/colab_icon.svg" /></a></li>
+  <li><a href="https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722Annotated_Attention_is_All_You_Need.ipynb" target="_blank">トランスフォーマー解説 <img src="/assets/colab_icon.svg" /></a></li>
 </ol>
 
 
