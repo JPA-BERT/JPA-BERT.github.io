@@ -1,11 +1,23 @@
 ---
-layout: default
+layout: home
 title: "Welcome to JPA BERT"
 ---
 
-# Welcome to JPA BERT
-
 このページは 2020年度日本心理学会チュートリアルワークショップ BERT 入門のページです。
+
+## 講演タイトル: 心理学におけるBERT入門
+
+## 要旨
+
+[BERT](https://arxiv.org/abs/1810.04805){:target="_blank"}  は自然言語処理モデルであり，この分野の流れを塗り替えてしまったゲームチェンジャーである。
+本チュートリアルワークショップでは [Colab](https://arxiv.org/abs/1810.04805){:target="_blank"} を使用した BERT の実習を通じてその可能性を 探る。
+BERT は自己注意に基づくモデルであり，一般的な知識を獲得する事前学習と個々の下流課 題に対するファインチューニングを特徴とする。
+これらの特徴は，心理学徒も議論してきた中心的 課題である。
+この意味で心理学との架け橋となる可能性を有していると考えられる。
+語彙判断課題，プライミングなどの心理実験とそれらのモデルへの応用についても議論する。
+参加者には colab, python, [PyTorch](https://pytorch.org/){:target="_blank"} での実習を予定しているが特別な事前知識は仮定しない。
+実習を行う環境 としてブラウザ Chrome をご準備いただくが，それ以外の事前準備は不要である。
+関心を共有する 諸賢の参加を呼びかける。
 
 - [Colab notebooks ソースコード置き場](notebooks)
 - [スライド1](/slides/2020jpa-bert_slides.html)
