@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>導入 | jpa-bert.github.io</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="導入" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="for 2020jpa tutorial workshop" />
+<meta property="og:description" content="for 2020jpa tutorial workshop" />
+<link rel="canonical" href="http://localhost:4444/intro.html" />
+<meta property="og:url" content="http://localhost:4444/intro.html" />
+<meta property="og:site_name" content="jpa-bert.github.io" />
+<script type="application/ld+json">
+{"url":"http://localhost:4444/intro.html","description":"for 2020jpa tutorial workshop","@type":"WebPage","headline":"導入","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4444/feed.xml" title="jpa-bert.github.io" /></head>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true,
+        tags: "ams",
+        autoload: {
+          color: [],
+          colorV2: ['color']
+        },
+        packages: {'[+]': ['noerrors']}
+      },
+      chtml: {
+        matchFontHeight: false,
+        displayAlign: "left",
+        displayIndent: "2em"
+      },
+      options: {
+        renderActions: {
+          /* add a new named action to render <script type="math/tex"> */
+          find_script_mathtex: [10, function (doc) {
+            for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            }
+          }, '']
+        }
+      },
+      loader: {
+        load: ['[tex]/noerrors']
+      }
+    };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script"></script>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">jpa-bert.github.io</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/playground/">簡単なデモ (プレイグラウンド)</a><a class="page-link" href="/notebooks/">colab ファイル置き場</a><a class="page-link" href="/">Welcome to JPA BERT</a><a class="page-link" href="/intro.html">導入</a><a class="page-link" href="/python_numpy_intro_ja.html">Python, NumPyチュートリアル</a><a class="page-link" href="/supp01_colab.html">Colab についての蘊蓄</a><a class="page-link" href="/supp02_colab_file_management.html">Colab 操作の基本</a><a class="page-link" href="/supp05_cnn.html">CNN についての蘊蓄</a><a class="page-link" href="/supp06_rnn.html">RNN リカレントニューラルネットワークについての蘊蓄</a><a class="page-link" href="/supp07_nlp.html">自然言語処理</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">導入</h1>
+    <p class="post-meta"><time class="dt-published" datetime="" itemprop="datePublished">
+        
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul>
+  <li><a href="https://wired.jp/2019/11/14/google-search-advancing-grade-reading/?fbclid=IwAR0ZyWC5Ll7xwtg0yaEMFv15jk3_BZZkKXf3dTs_jbNr-DVoKSAZUtsKlSo#%E2%80%A6">Googleの検索エンジンに「過去5年で最大の飛躍」。新たな言語処理モデル「BERT」の秘密</a> (<a href="https://www.wired.com/story/google-search-advancing-grade-reading/">Original</a>)</li>
+  <li><a href="https://context-composition.github.io/">Context and Compositionality in Biological and Artificial Neural Systems</a> in neurips2019
+    <ol>
+      <li><a href="https://slideslive.com/38922193/context-and-compositionality-in-biological-and-artificial-neural-systems-2">Tom Mitchell</a>
+        <ul>
+          <li>2019年は2018年までの世界とは異なる (45:40 くらいから)</li>
+          <li>(1:01:40くらい) おそらく我々(人類)は今特別な時点にいる。脳が数千年に渡って実行してきた機能を実行する深層学習モデルを持ったからだ。</li>
+        </ul>
+      </li>
+    </ol>
+
+    <p><img src="/assets/2019mitchell-54_20.png" alt="" />
+  <img src="/assets/2019mitchell_2.png" alt="" />
+  <img src="/assets/2019mitchell_3.png" alt="" />
+  <img src="/assets/2019mitchell_4.png" alt="" /></p>
+
+    <ol>
+      <li><a href="https://slideslive.com/38922080/context-and-compositionality-in-biological-and-artificial-neural-systems-3">Yoshua Bengio</a> (20:20 くらいから) システム 1 とシステム 2 とを結びつける鍵は注意である。</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="リンク">リンク</h3>
+
+<ul>
+  <li><a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">The Annotated Transformer</a></li>
+  <li><a href="http://jalammar.github.io/illustrated-transformer/">Illustrated transformer</a></li>
+  <li><a href="http://jalammar.github.io/illustrated-bert/">The Illustrated BERT, ELMo, and co. (How NLP Cracked Transfer Learning</a>
+    <ul>
+      <li><a href="https://colab.research.google.com/github/tensorflow/tensor2tensor/blob/master/tensor2tensor/notebooks/hello_t2t.ipynb">T2T notebook</a></li>
+      <li><a href="https://towardsdatascience.com/deconstructing-bert-distilling-6-patterns-from-100-million-parameters-b49113672f77">Deconstructing BERT: Distilling 6 Patterns from 100 Million Parameters</a></li>
+      <li><a href="https://towardsdatascience.com/deconstructing-bert-part-2-visualizing-the-inner-workings-of-attention-60a16d86b5c1">Deconstructing BERT, Part 2: Visualizing the Inner Workings of Attention</a>
+        <ul>
+          <li><a href="https://github.com/jessevig/bertviz">注意の視覚化ツール</a></li>
+          <li><a href="https://arxiv.org/abs/1904.02679">Visualizing Attention in Transformer-Based Language Representation Models</a>, <a href="https://www.youtube.com/watch?v=69alFnWcVl4K">YouTube</a></li>
+          <li><a href="https://arxiv.org/abs/1906.05714">A Multiscale Visualization of Attention in the Transformer Model</a>, <a href="https://vimeo.com/340841955">video</a></li>
+          <li><a href="https://arxiv.org/abs/1906.04284">Analyzing the Structure of Attention in a Transformer Language Model</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="https://github.com/tensorflow/tensor2tensor">https://github.com/tensorflow/tensor2tensor</a></li>
+  <li><a href="https://github.com/huggingface/pytorch-pretrained-BERT">https://github.com/huggingface/pytorch-pretrained-BERT</a></li>
+</ul>
+
+<h3 id="自然言語処理諸課題における各モデルの性能比較-glue-leaderboad">自然言語処理諸課題における各モデルの性能比較 GLUE leaderboad</h3>
+
+<ul>
+  <li><a href="https://gluebenchmark.com/leaderboard/">GLUE</a></li>
+  <li><a href="https://super.gluebenchmark.com/leaderboard/">super GLUE</a></li>
+</ul>
+
+
+  </div><a class="u-url" href="/intro.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">jpa-bert.github.io</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">jpa-bert.github.io</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>for 2020jpa tutorial workshop</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
