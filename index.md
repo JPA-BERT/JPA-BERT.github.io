@@ -19,6 +19,8 @@ BERT は自己注意に基づくモデルであり，一般的な知識を獲得
 実習を行う環境 としてブラウザ Chrome をご準備いただくが，それ以外の事前準備は不要である。
 関心を共有する 諸賢の参加を呼びかける。
 
+
+- [導入](intro.html)
 - [Colab notebooks ソースコード置き場](notebooks)
 - [スライド1](/slides/2020jpa-bert_slides.html)
 - [スライド2](/slides/2020jpa-bert_slides2.html#(2))
