@@ -80,11 +80,11 @@
   <link rel="stylesheet" type="text/css" media="screen, projection, print"
     href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
   <link rel="stylesheet" type="text/css" media="screen, projection, print"
-   href="/Users/asakawa/study/css/asa_markdown2.css" />
+   href="css/asa_markdown2.css" />
   <link rel="stylesheet" type="text/css" media="screen, projection, print"
-   href="/Users/asakawa/study/css/turing.css" />
-  <script src="/Users/asakawa/study/2019mathjax-MathJax-419b0a6/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-  <script type="text/x-mathjax-config">
+   href="css/turing.css" />
+ <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS_CHTML"></script>
+ <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "all"} } });
   </script>
   <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
@@ -257,7 +257,7 @@
 <h1>Show and Tell (2014)</h1>
 <!--
 <center>
-![](./assets/2014Simoyaman_Fig3nocap.svg){#fig:2014Simoyaman_Fig3nocap style="width:74%"}</br>
+![](figures/2014Simoyaman_Fig3nocap.svg){#fig:2014Simoyaman_Fig3nocap style="width:74%"}</br>
 Weakly supervised object segmentation using ConvNets.
 </center>
 -->
@@ -305,7 +305,7 @@ Weakly supervised object segmentation using ConvNets.
 <div id="bert-の入力表現" class="slide section level1">
 <h1>BERT の入力表現</h1>
 <center>
-<img src="./figures/2018Devlin_BERT_Fig2.svg" style="width:84%"><br /> 埋め込みトークンの総和，位置符号器，分離埋め込みの 3 者 From <span class="citation">(Devlin et al. 2018)</span> Fig. 2
+<img src="figures/2018Devlin_BERT_Fig2.svg" style="width:84%"><br /> 埋め込みトークンの総和，位置符号器，分離埋め込みの 3 者 From <span class="citation">(Devlin et al. 2018)</span> Fig. 2
 </center>
 </div>
 <div id="bert-の事前訓練-マスク化言語モデル" class="slide section level1">
@@ -338,7 +338,7 @@ Weakly supervised object segmentation using ConvNets.
 - [SEP]: 文分離記号 
 -->
 <center>
-<img src="./figures/2018Devlin_BERT_Fig3.svg" style="width:44%"><br/> From <span class="citation">(Devlin et al. 2018)</span> Fig.3
+<img src="figures/2018Devlin_BERT_Fig3.svg" style="width:44%"><br/> From <span class="citation">(Devlin et al. 2018)</span> Fig.3
 </center>
 </div>
 <div id="glue-general-language-understanding-evaluation" class="slide section level1">
@@ -368,7 +368,7 @@ Weakly supervised object segmentation using ConvNets.
 </ul>
 <!-- # BERT ファインチューニング手続き
 <center>
-<img src="./assets/2019Devlin_mask_method21.jpg" style="width:74%"><br/>
+<img src="figure/2019Devlin_mask_method21.jpg" style="width:74%"><br/>
 </center>
  -->
 </div>
@@ -380,7 +380,7 @@ Weakly supervised object segmentation using ConvNets.
 <p>マスク化言語モデルのマスク化割合は マスクトークン:ランダム置換:オリジナル=80:10:10 だけでなく， 他の割合で訓練した場合の 2 種類下流課題， MNLI と NER で変化するかを下図  に示した。 80:10:10 の性能が最も高いが大きな違いがあるわけではないようである。</p>
 <!-- # BERT モデルサイズ比較
 <center>
-<img src="./assets/2019Devlin_model_size20.jpg" style="width:69%"><br/>
+<img src="figures/2019Devlin_model_size20.jpg" style="width:69%"><br/>
 </center>
  -->
 </div>
@@ -392,7 +392,7 @@ Weakly supervised object segmentation using ConvNets.
 <p>パラメータ数を増加させて大きなモデルにすれば精度向上が期待できる。 下図では，横軸にパラメータ数で MNLI は青と MRPC は赤 で描かれている。 パラメータ数増加に伴い精度向上が認められる。 図に描かれた範囲では精度が天井に達している訳ではない。パラメータ数が増加すれば精度は向上していると認められる。</p>
 <!-- # BERT モデル単方向，双方向モデル比較
 <center>
-<img src="./assets/2019Devlin_directionality19.jpg" style="width:66%"><br/>
+<img src="figures/2019Devlin_directionality19.jpg" style="width:66%"><br/>
 </center>
 
  -->
@@ -405,7 +405,7 @@ Weakly supervised object segmentation using ConvNets.
 <p>言語モデルをマスク化言語モデルか次単語予測の従来型の言語モデルによるかの相違による性能比較を 下図  に示した。 横軸には訓練ステップである。訓練が進むことでマスク化言語モデルとの差は 2 パーセントではあるが認められるようである。</p>
 <!-- # BERT 事前訓練比較
 <center>
-<img src="./assets/2019Devlin_Effect_of_Pretraining18.jpg" style="width:66%"><br/>
+<img src="figures/2019Devlin_Effect_of_Pretraining18.jpg" style="width:66%"><br/>
 </center>
 -->
 </div>
@@ -434,7 +434,7 @@ Weakly supervised object segmentation using ConvNets.
 <div id="事前訓練とマルチ課題学習" class="slide section level1">
 <h1>事前訓練とマルチ課題学習</h1>
 <center>
-<img src="./figures/mt-dnn.png" style="width:66%"><br/> From <span class="citation">(X. Liu et al. 2019)</span> Fig. 1
+<img src="figures/mt-dnn.png" style="width:66%"><br/> From <span class="citation">(X. Liu et al. 2019)</span> Fig. 1
 </center>
 </div>
 <div id="transformer-attention-is-all-you-need" class="slide section level1">
@@ -442,7 +442,7 @@ Weakly supervised object segmentation using ConvNets.
 <p><span class="math display">\[\mathop{attention}\left(Q,K,V\right)=\mathop{dropout}\left(\mathop{softmax}\left(\frac{QK^\top}{\sqrt{d}
 }\right)\right)V\]</span></p>
 <center>
-<img src="./figures/2017Vaswani_Fig2_1.svg" style="width:17%"> <img src="./figures/2017Vaswani_Fig2_2.svg" style="width:23%"><br /> From <span class="citation">(Vaswani et al. 2017)</span> Fig. 2
+<img src="figures/2017Vaswani_Fig2_1.svg" style="width:17%"> <img src="figures/2017Vaswani_Fig2_2.svg" style="width:23%"><br /> From <span class="citation">(Vaswani et al. 2017)</span> Fig. 2
 </center>
 <!-- 
 # Transformer(2): Attention is all you need

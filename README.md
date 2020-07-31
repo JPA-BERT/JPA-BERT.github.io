@@ -124,3 +124,48 @@ $ git reset --hard HEAD
 ```
 
 - 参照: https://qiita.com/wann/items/688bc17460a457104d7d
+
+### 7. git pull コンフリクト解決法
+
+GitHub SSH に接続して `git pull origin master` をすると
+
+```bash
+$ git pull origin master
+From https://github.com/user-name/app-name
+     * branch　     master       ->   FETCH_HEAD
+Updating e05c05f..050505
+...
+
+Please commit your changes or stash them before you merge.
+Aborting
+$
+```
+
+「次のファイルに対するローカルの変更は、マージによって上書きされます」
+「マージする前に変更をコミットするか、隠してください」
+とコンフリクトのエラー文。
+
+#### 7.1. ファイルを一度削除する
+
+gemfile.lock などはバージョンや gem file に変更があるたびに更新されるため 一度消してしまっても問題ない。
+
+```bash
+# ファイルのあるディレクトリへ移動
+$ rm Gemfile.lock
+$ git pull origin master
+```
+
+#### 7.2 強制的にマージ
+
+リモートの最新状況に合わせに行くような強制マージなので 問題になることは無いはずです。
+もちろん `pull` しようとしていた `master` が正しい前提。
+
+```bash
+# 1) リモートの最新を取ってきておいて・・
+$ git fetch origin master
+
+# 2) masterを、リモート追跡のmasterに強制的に合わせる
+$ git reset --hard origin/master
+```
+
+
