@@ -21,3 +21,11 @@ layout: default
 1. [トランスフォーマーによる言語モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0726torch_word_language_model.ipynb){:target="_blank"} 
 6. [トランスフォーマー解説 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722Annotated_Attention_is_All_You_Need.ipynb){:target="_blank"}
 
+---
+<br/>
+
+PyTorch の チュートリアルを翻訳しました。
+
+1. [トランスフォーマーを用いた seq2seq モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/01PyTorchTEXT_transformer_tutorial.ipynb)
+2. [ゼロからの自然言語処理 文字レベルRNN による苗字名の言語識別 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/02PyTorchTEXT_char_rnn_classification_tutorial.ipynb)
+3. [ゼロからの自然言語処理 文字レベルRNN による苗字名の言語生成 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/03PyTorchTEXT_char_rnn_generation_tutorial.ipynb)
