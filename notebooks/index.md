@@ -17,6 +17,15 @@ layout: default
 ---
 <br/>
 
+BERT の事前訓練は，マスク化言語モデルと次文予測課題です。以下はそのサンプルです。
+
+1. [マスク化言語モデル  <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/notebooks/2020_0809mlm_task.ipynb)
+2. [次文予測課題  <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/ShinAsakawa.github.io/blob/master/notebooks/2020_0809ns_task.ipynb)
+
+
+---
+<br/>
+
 1. [word2vec によるアナロジー <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/ShinAsakawa/2019cnps/blob/master/notebooks/2019cnps_word2vec.ipynb){:target="_blank"}
 1. [トランスフォーマーによる言語モデル <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0726torch_word_language_model.ipynb){:target="_blank"} 
 6. [トランスフォーマー解説 <img src="/assets/colab_icon.svg">](https://colab.research.google.com/github/JPA-BERT/jpa-bert.github.io/blob/master/notebooks/2020_0722Annotated_Attention_is_All_You_Need.ipynb){:target="_blank"}
