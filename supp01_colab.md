@@ -112,6 +112,15 @@ Keras 単体としての更新は 凍結されています。
 
 [^my_opinion01]: 筆者の主観です。ですがこの言質に対する反論は聞いたことが有りません。
 
+また，我が国における TEnsroFlow, Keras, PyTorch の人気については，<https://trends.google.com/trends/explore?geo=JP&q=pytorch,keras,tensorflow> をご覧ください。
+<https://trends.google.com/trends/explore?date=today%205-y&geo=JP&q=pytorch,keras,tensorflow>
+
+下図に主たる国際会議で採択された論文中の PyTorch と TensorFlow の割合を示しました。
+先述の通り，PyTorch の割合が増加していることが見て取れます。
+<div align="center">
+	<img src="assets/2020-0819horace_io_pytorch-papers-of-total.svg" style="width:66%"><br/>
+	source: <http://horace.io/pytorch-vs-tensorflow/>
+</div>
 
 # Colaboratory 事始め
 

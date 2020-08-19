@@ -8,8 +8,8 @@ https://jpa-bert.github.io/
 ## 手順 1. `git clone` コマンドで GitHub の内容をすべてローカルディレクトリにダウンロードする
 
 ```bash
-$ git clone https://ShinAsakawa.github.io.git [ダウンロードするディレクトリ名. 省略可]
-$ cd ShinAsakawa.githuh.io.git [または上のコマンドで指定したディレクトリ名]
+$ git clone https://JPA-BERT/jpa-bert.github.io.git [ダウンロードするディレクトリ名. 省略可]
+$ cd jpa-bert.github.io [または上のコマンドで指定したディレクトリ名]
 ```
 
 ## 手順 2. ページの更新方法
@@ -54,7 +54,7 @@ GitHub pages は ``jeykell`` での管理を前提としている場合が多い
 ### 4.1 ``jekyll`` 操作のための command line tools のインストール
 
 ```bash
-$ cd ShinAsaawa.github.io.git
+$ cd jpa-bert
 $ gem install bundler
 $ bundle init
 $ vim Gemfile (他のテキストエディアでも可)
